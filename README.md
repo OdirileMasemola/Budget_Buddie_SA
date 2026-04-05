@@ -70,7 +70,7 @@ Comming soon...
 ---
 
 ## 📸 Screenshots
-(Add screenshots of your app here)
+Comming soon...
 
 ---
 
