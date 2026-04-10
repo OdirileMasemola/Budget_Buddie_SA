@@ -42,28 +42,7 @@
         android:id="@+id/btnAddExpense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Expense"
-        android:layout_marginBottom="8dp"/>
-
-    <Button
-        android:id="@+id/btnViewExpenses"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Expenses"
-        android:layout_marginBottom="8dp"/>
-
-    <Button
-        android:id="@+id/btnCategories"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Categories"
-        android:layout_marginBottom="8dp"/>
-
-    <Button
-        android:id="@+id/btnBudgetSettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Budget Settings"
+        android:text="Quick Add Expense"
         android:layout_marginBottom="8dp"/>
 
 </LinearLayout>
