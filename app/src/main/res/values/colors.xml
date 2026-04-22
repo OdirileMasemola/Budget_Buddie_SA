@@ -5,6 +5,9 @@
     <color name="purple_primary">#6200EE</color>
     <color name="purple_variant">#3700B3</color>
     <color name="purple_light">#BB86FC</color>
+    <color name="orange_accent">#FF9800</color>
+    <color name="orange_dark">#F57C00</color>
     <color name="text_grey">#757575</color>
     <color name="divider_color">#EEEEEE</color>
+    <color name="background_light">#F5F5F5</color>
 </resources>

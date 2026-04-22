@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#F5F5F5" />
+        </shape>
+    </item>
+    <item android:bottom="20dp" android:left="10dp" android:right="10dp" android:top="20dp">
+        <vector android:height="24dp" android:viewportHeight="24" android:viewportWidth="24" android:width="24dp">
+            <path android:fillColor="#BB86FC" android:pathData="M2,20h20v2H2zM4,14h2v4H4zM10,10h2v8h-2zM16,4h2v14h-2z" />
+        </vector>
+    </item>
+</layer-list>
