@@ -19,9 +19,9 @@ class ExpenseRepository {
 
     fun getDummyHistory(): List<Expense> {
         return listOf(
-            Expense("1", 450.0, "Grocery", "Pick n Pay", Date()),
-            Expense("2", 120.0, "Transport", "Uber", Date()),
-            Expense("3", 2000.0, "Rent", "Apartment", Date())
+            Expense(amount = 450.0, date = Date().time, description = "Pick n Pay", categoryId = 1),
+            Expense(amount = 120.0, date = Date().time, description = "Uber", categoryId = 2),
+            Expense(amount = 2000.0, date = Date().time, description = "Apartment", categoryId = 3)
         )
     }
 }

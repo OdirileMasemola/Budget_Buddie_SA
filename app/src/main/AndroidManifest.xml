@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".BudgetApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -27,8 +28,6 @@
         <activity android:name=".ExpenseListActivity" />
         <activity android:name=".CategoryActivity" />
         <activity android:name=".BudgetActivity" />
-
-        <!-- Keeping MainActivity if it's already there, but it's not the launcher anymore -->
         <activity android:name=".MainActivity" />
 
     </application>

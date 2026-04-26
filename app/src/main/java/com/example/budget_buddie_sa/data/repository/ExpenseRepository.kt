@@ -1,28 +1,22 @@
 package com.example.budget_buddie_sa.data.repository
 
+import com.example.budget_buddie_sa.data.local.ExpenseDao
 import com.example.budget_buddie_sa.data.model.Expense
-import java.util.*
+import kotlinx.coroutines.flow.Flow
 
 /**
- * Repository to handle data operations for Expenses.
- * Following the Repository pattern for Clean Architecture.
+ * Repository to handle data operations for Expenses using Room.
  */
-class ExpenseRepository {
-    
-    // In-memory data for now
-    private val expenses = mutableListOf<Expense>()
+class ExpenseRepository(private val expenseDao: ExpenseDao) {
 
-    fun getAllExpenses(): List<Expense> = expenses
+    val allExpenses: Flow<List<Expense>> = expenseDao.getAllExpenses()
+    val totalSpending: Flow<Double?> = expenseDao.getTotalSpending()
 
-    fun addExpense(expense: Expense) {
-        expenses.add(expense)
+    suspend fun addExpense(expense: Expense) {
+        expenseDao.insertExpense(expense)
     }
 
-    fun getRecentHistory(): List<Expense> {
-        return listOf(
-            Expense("1", 450.0, "Grocery", "Pick n Pay", Date()),
-            Expense("2", 120.0, "Transport", "Uber", Date()),
-            Expense("3", 2000.0, "Rent", "Apartment", Date())
-        )
+    suspend fun deleteExpense(expense: Expense) {
+        expenseDao.deleteExpense(expense)
     }
 }
