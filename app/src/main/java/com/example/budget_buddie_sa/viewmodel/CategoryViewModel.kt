@@ -2,11 +2,12 @@ package com.example.budget_buddie_sa.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.budget_buddie_sa.data.local.AppDatabase
 import com.example.budget_buddie_sa.data.model.Category
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -17,8 +18,8 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
 
     private val categoryDao = AppDatabase.getDatabase(application).categoryDao()
 
-    // Room returns a Flow, so we can expose it directly
-    val allCategories: Flow<List<Category>> = categoryDao.getAllCategories()
+    // Expose categories as LiveData for easier lifecycle management in Activity
+    val allCategories: LiveData<List<Category>> = categoryDao.getAllCategories().asLiveData()
 
     fun insertCategory(name: String) {
         val newCategory = Category(

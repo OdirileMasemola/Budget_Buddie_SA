@@ -37,23 +37,42 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
     }
 
     private fun setupRailNavigation() {
-        findViewById<ImageView>(R.id.rail_dashboard).setOnClickListener {
-            if (this !is DashboardActivity) startActivity(Intent(this, DashboardActivity::class.java))
+        findViewById<LinearLayout>(R.id.nav_row_dashboard).setOnClickListener {
+            navigateTo(DashboardActivity::class.java)
         }
-        findViewById<ImageView>(R.id.rail_add).setOnClickListener {
-            if (this !is AddExpenseActivity) startActivity(Intent(this, AddExpenseActivity::class.java))
+        findViewById<LinearLayout>(R.id.nav_row_add).setOnClickListener {
+            navigateTo(AddExpenseActivity::class.java)
         }
-        findViewById<ImageView>(R.id.rail_list).setOnClickListener {
-            if (this !is ExpenseListActivity) startActivity(Intent(this, ExpenseListActivity::class.java))
+        findViewById<LinearLayout>(R.id.nav_row_list).setOnClickListener {
+            navigateTo(ExpenseListActivity::class.java)
         }
-        findViewById<ImageView>(R.id.rail_category).setOnClickListener {
-            if (this !is CategoryActivity) startActivity(Intent(this, CategoryActivity::class.java))
+        findViewById<LinearLayout>(R.id.nav_row_category).setOnClickListener {
+            navigateTo(CategoryActivity::class.java)
         }
-        findViewById<ImageView>(R.id.rail_budget).setOnClickListener {
-            if (this !is BudgetActivity) startActivity(Intent(this, BudgetActivity::class.java))
+        findViewById<LinearLayout>(R.id.nav_row_budget).setOnClickListener {
+            navigateTo(BudgetActivity::class.java)
         }
-        findViewById<ImageView>(R.id.rail_profile).setOnClickListener {
-            if (this !is ProfileActivity) startActivity(Intent(this, ProfileActivity::class.java))
+        findViewById<LinearLayout>(R.id.nav_row_profile).setOnClickListener {
+            navigateTo(ProfileActivity::class.java)
+        }
+    }
+
+    private fun <T> navigateTo(activityClass: Class<T>) {
+        // First, save the collapsed state so the next activity starts minimized
+        getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("rail_expanded", false)
+            .apply()
+
+        // Then, if we are not already on that page, navigate to it
+        if (this::class.java != activityClass) {
+            startActivity(Intent(this, activityClass))
+        } else {
+            // If we are already on the page, just collapse the rail visually
+            val rail = findViewById<LinearLayout>(R.id.rail_nav)
+            val toggleBtn = findViewById<ImageButton>(R.id.btn_toggle_rail)
+            animateRail(rail, false)
+            toggleBtn.animate().rotation(0f).setDuration(300).start()
         }
     }
 

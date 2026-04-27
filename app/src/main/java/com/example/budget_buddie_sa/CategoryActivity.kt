@@ -39,11 +39,9 @@ class CategoryActivity : BaseNavigationActivity() {
         rvCategories.layoutManager = LinearLayoutManager(this)
         rvCategories.adapter = adapter
 
-        // Observe categories using the ViewModel's Flow
-        lifecycleScope.launch {
-            categoryViewModel.allCategories.collectLatest { categories ->
-                adapter.updateData(categories)
-            }
+        // Observe categories from ViewModel (LiveData updates automatically)
+        categoryViewModel.allCategories.observe(this) { categories ->
+            adapter.updateData(categories)
         }
 
         btnAddCategory.setOnClickListener {

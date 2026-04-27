@@ -48,11 +48,13 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
+                    android:id="@+id/nav_row_dashboard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingStart="12dp">
+                    android:paddingStart="12dp"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/rail_dashboard"
@@ -73,11 +75,13 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/nav_row_add"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingStart="12dp">
+                    android:paddingStart="12dp"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/rail_add"
@@ -98,11 +102,13 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/nav_row_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingStart="12dp">
+                    android:paddingStart="12dp"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/rail_list"
@@ -123,11 +129,13 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/nav_row_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingStart="12dp">
+                    android:paddingStart="12dp"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/rail_category"
@@ -148,11 +156,13 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/nav_row_budget"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingStart="12dp">
+                    android:paddingStart="12dp"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/rail_budget"
@@ -173,19 +183,21 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/nav_row_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingStart="12dp">
+                    android:paddingStart="12dp"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
-                        android:id="@+id/rail_profile"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:padding="12dp"
-                        android:src="@drawable/ic_category"
-                        app:tint="@color/white" />
+                    android:id="@+id/rail_profile"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_profile"
+                    app:tint="@color/white" />
 
                     <TextView
                         android:id="@+id/label_profile"

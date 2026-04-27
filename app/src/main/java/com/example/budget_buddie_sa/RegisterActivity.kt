@@ -3,6 +3,7 @@ package com.example.budget_buddie_sa
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +28,7 @@ class RegisterActivity : AppCompatActivity() {
         val etRegPassword = findViewById<EditText>(R.id.etRegPassword)
         val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
         val btnRegister = findViewById<Button>(R.id.btnRegister)
+        val tvLoginLink = findViewById<TextView>(R.id.tvLoginLink)
 
         // Observe registration result
         authViewModel.authState.observe(this) { result ->
@@ -40,6 +42,10 @@ class RegisterActivity : AppCompatActivity() {
                 }
                 else -> {}
             }
+        }
+
+        tvLoginLink.setOnClickListener {
+            finish() // Simply finish to go back to LoginActivity
         }
 
         btnRegister.setOnClickListener {
