@@ -8,40 +8,17 @@
     tools:context=".CategoryActivity">
 
     <!-- Header Section -->
-    <View
-        android:id="@+id/headerBackground"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/purple_primary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvHeaderTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Categories"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/headerBackground"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/headerBackground" />
 
     <!-- RecyclerView for Categories -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCategories"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:paddingHorizontal="8dp"
+        android:layout_width="400dp"
+        android:layout_height="661dp"
         android:clipToPadding="false"
+        android:paddingHorizontal="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerBackground"
         tools:listitem="@layout/item_category" />
 
     <!-- Floating Action Button to Add Category -->

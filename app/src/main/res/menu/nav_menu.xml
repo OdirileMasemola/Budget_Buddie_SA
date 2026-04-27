@@ -21,5 +21,9 @@
             android:id="@+id/nav_budget"
             android:icon="@drawable/ic_settings"
             android:title="Budget Settings" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_category"
+            android:title="Profile" />
     </group>
 </menu>

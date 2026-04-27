@@ -9,185 +9,211 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/rail_nav"
-            android:layout_width="72dp"
-            android:layout_height="match_parent"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:orientation="vertical"
-            android:paddingTop="16dp">
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/rail_dashboard"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_dashboard"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:id="@+id/label_dashboard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dashboard"
-                    android:textColor="@color/white"
-                    android:visibility="gone"
-                    android:paddingStart="8dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp">
-
-                <ImageView
-                    android:id="@+id/rail_add"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_add"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:id="@+id/label_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Add Item"
-                    android:textColor="@color/white"
-                    android:visibility="gone"
-                    android:paddingStart="8dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp">
-
-                <ImageView
-                    android:id="@+id/rail_list"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_list"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:id="@+id/label_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="List"
-                    android:textColor="@color/white"
-                    android:visibility="gone"
-                    android:paddingStart="8dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp">
-
-                <ImageView
-                    android:id="@+id/rail_category"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_category"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:id="@+id/label_category"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Categories"
-                    android:textColor="@color/white"
-                    android:visibility="gone"
-                    android:paddingStart="8dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp">
-
-                <ImageView
-                    android:id="@+id/rail_budget"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_settings"
-                    app:tint="@color/white" />
-
-                <TextView
-                    android:id="@+id/label_budget"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Budget"
-                    android:textColor="@color/white"
-                    android:visibility="gone"
-                    android:paddingStart="8dp"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/btn_toggle_rail"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:src="@android:drawable/ic_media_play"
-                app:tint="@color/white" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                android:elevation="4dp"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
+            <!-- Content frame will be pushed to the right of the COLLAPSED rail -->
             <FrameLayout
                 android:id="@+id/content_frame"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="72dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu" />
+            <!-- The rail starts at the edge. When it expands, it will cover the content -->
+            <LinearLayout
+                android:id="@+id/rail_nav"
+                android:layout_width="72dp"
+                android:layout_height="match_parent"
+                android:background="?attr/colorPrimary"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:elevation="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp">
+
+                    <ImageView
+                        android:id="@+id/rail_dashboard"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_dashboard"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/label_dashboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dashboard"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:paddingStart="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp">
+
+                    <ImageView
+                        android:id="@+id/rail_add"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_add"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/label_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add Item"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:paddingStart="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp">
+
+                    <ImageView
+                        android:id="@+id/rail_list"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_list"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/label_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="List"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:paddingStart="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp">
+
+                    <ImageView
+                        android:id="@+id/rail_category"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_category"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/label_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Categories"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:paddingStart="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp">
+
+                    <ImageView
+                        android:id="@+id/rail_budget"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_settings"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/label_budget"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Budget"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:paddingStart="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp">
+
+                    <ImageView
+                        android:id="@+id/rail_profile"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_category"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/label_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Profile"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:paddingStart="8dp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/btn_toggle_rail"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@android:drawable/ic_media_play"
+                    app:tint="@color/white" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

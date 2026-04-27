@@ -11,5 +11,8 @@ data class User(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val username: String,
+    val firstName: String = "",
+    val lastName: String = "",
+    val email: String = "",
     val password: String // In a real app, this should be hashed
 )
