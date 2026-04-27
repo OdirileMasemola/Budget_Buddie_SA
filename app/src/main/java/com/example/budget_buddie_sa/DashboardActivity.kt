@@ -6,15 +6,20 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.budget_buddie_sa.adapter.ExpenseAdapter
 import com.example.budget_buddie_sa.viewmodel.DashboardViewModel
+import java.util.*
 
 /**
  * Dashboard screen following MVVM pattern.
+ * It observes real-time data from the ViewModel and updates the UI automatically.
  */
 class DashboardActivity : BaseNavigationActivity() {
 
-    // Injecting ViewModel using activity-ktx
     private val viewModel: DashboardViewModel by viewModels()
+    private lateinit var expenseAdapter: ExpenseAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,18 +31,32 @@ class DashboardActivity : BaseNavigationActivity() {
         val tvRemainingBudget = findViewById<TextView>(R.id.tvRemainingBudget)
         val pbBudgetTracking = findViewById<ProgressBar>(R.id.pbBudgetTracking)
         val btnAddExpense = findViewById<Button>(R.id.btnAddExpense)
+        val rvRecentExpenses = findViewById<RecyclerView>(R.id.rvRecentExpenses)
 
-        // Observe Data from ViewModel
-        viewModel.remainingBudget.observe(this) { budget ->
-            tvRemainingBudget.text = budget
+        // Setup RecyclerView for recent transactions
+        expenseAdapter = ExpenseAdapter(emptyList())
+        rvRecentExpenses.layoutManager = LinearLayoutManager(this)
+        rvRecentExpenses.adapter = expenseAdapter
+
+        // Observe Total Spending
+        viewModel.totalSpendingValue.observe(this) { spending ->
+            val total = spending ?: 0.0
+            tvTotalSpending.text = String.format(Locale.getDefault(), "R %.2f", total)
         }
 
-        viewModel.totalSpending.observe(this) { spending ->
-            tvTotalSpending.text = spending
+        // Observe Remaining Budget
+        viewModel.remainingBudget.observe(this) { remaining ->
+            tvRemainingBudget.text = String.format(Locale.getDefault(), "R %.2f", remaining)
         }
 
+        // Observe Spending Progress
         viewModel.spendingProgress.observe(this) { progress ->
             pbBudgetTracking.progress = progress
+        }
+
+        // Observe Recent Expenses
+        viewModel.recentExpenses.observe(this) { expenses ->
+            expenseAdapter.updateData(expenses)
         }
 
         btnAddExpense.setOnClickListener {

@@ -15,6 +15,7 @@
         android:padding="12dp">
 
         <View
+            android:id="@+id/viewCategoryIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/circle_shape"
@@ -28,6 +29,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Grocery Shopping"
@@ -36,6 +38,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Today, 2:30 PM"
@@ -44,6 +47,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="- R 450.00"

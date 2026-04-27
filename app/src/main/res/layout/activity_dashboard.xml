@@ -172,10 +172,12 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Dummy History Items -->
-        <include layout="@layout/item_history_dummy" />
-        <include layout="@layout/item_history_dummy" />
-        <include layout="@layout/item_history_dummy" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRecentExpenses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_history_dummy" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
