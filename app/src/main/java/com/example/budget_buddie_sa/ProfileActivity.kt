@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
-import com.example.budget_buddie_sa.data.local.AppDatabase
-import kotlinx.coroutines.launch
+import androidx.lifecycle.ViewModelProvider
+import com.example.budget_buddie_sa.viewmodel.ProfileViewModel
 
 class ProfileActivity : BaseNavigationActivity() {
 
     private lateinit var sessionManager: SessionManager
+    private lateinit var profileViewModel: ProfileViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +19,7 @@ class ProfileActivity : BaseNavigationActivity() {
 
         sessionManager = SessionManager(this)
         
-        // Safety check: if not logged in, go to login
+        // Ensure user is logged in
         if (!sessionManager.isLoggedIn()) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
@@ -27,26 +27,31 @@ class ProfileActivity : BaseNavigationActivity() {
             return
         }
 
-        supportActionBar?.title = "Profile"
+        // Initialize ViewModel
+        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
 
         val tvFullName = findViewById<TextView>(R.id.tvFullName)
         val tvEmail = findViewById<TextView>(R.id.tvEmail)
         val tvUsername = findViewById<TextView>(R.id.tvUsername)
         val btnLogout = findViewById<Button>(R.id.btnLogout)
 
-        val database = AppDatabase.getDatabase(this)
-        val userId = sessionManager.getUserId()
-
-        lifecycleScope.launch {
-            val user = database.userDao().getUserById(userId)
-            if (user != null) {
-                tvFullName.text = "${user.firstName} ${user.lastName}"
-                tvEmail.text = user.email
-                tvUsername.text = user.username
-            } else {
-                Toast.makeText(this@ProfileActivity, "User not found", Toast.LENGTH_SHORT).show()
+        // Observe profile data
+        profileViewModel.userProfile.observe(this) { user ->
+            user?.let {
+                tvFullName.text = "${it.firstName} ${it.lastName}"
+                tvEmail.text = it.email
+                tvUsername.text = it.username
             }
         }
+
+        // Observe errors
+        profileViewModel.error.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+
+        // Fetch user data via ViewModel
+        val userId = sessionManager.getUserId()
+        profileViewModel.fetchUserProfile(userId)
 
         btnLogout.setOnClickListener {
             sessionManager.clearSession()

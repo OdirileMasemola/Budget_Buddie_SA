@@ -7,13 +7,13 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.example.budget_buddie_sa.data.local.AppDatabase
-import kotlinx.coroutines.launch
+import androidx.lifecycle.ViewModelProvider
+import com.example.budget_buddie_sa.viewmodel.AuthViewModel
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
+    private lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,12 +28,30 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
+        // Initialize ViewModel using ViewModelProvider (Standard way)
+        authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val tvRegisterLink = findViewById<TextView>(R.id.tvRegisterLink)
 
-        val database = AppDatabase.getDatabase(this)
+        // Observe authentication state from ViewModel
+        authViewModel.authState.observe(this) { result ->
+            when (result) {
+                is AuthViewModel.AuthResult.Success -> {
+                    // Save session and navigate
+                    sessionManager.saveSession(result.user.id)
+                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                    navigateToDashboard()
+                }
+                is AuthViewModel.AuthResult.Error -> {
+                    // Show error message
+                    Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
+                }
+                else -> {} 
+            }
+        }
 
         btnLogin.setOnClickListener {
             val username = etUsername.text.toString().trim()
@@ -44,16 +62,8 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            lifecycleScope.launch {
-                val user = database.userDao().getUserByUsername(username)
-                if (user != null && user.password == password) {
-                    sessionManager.saveSession(user.id)
-                    Toast.makeText(this@LoginActivity, "Login Successful", Toast.LENGTH_SHORT).show()
-                    navigateToDashboard()
-                } else {
-                    Toast.makeText(this@LoginActivity, "Invalid Credentials", Toast.LENGTH_SHORT).show()
-                }
-            }
+            // Call login logic in ViewModel (Off-main-thread)
+            authViewModel.login(username, password)
         }
 
         tvRegisterLink.setOnClickListener {

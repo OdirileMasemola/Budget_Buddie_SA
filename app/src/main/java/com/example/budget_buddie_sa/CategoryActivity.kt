@@ -5,26 +5,27 @@ import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budget_buddie_sa.adapter.CategoryAdapter
-import com.example.budget_buddie_sa.data.local.AppDatabase
-import com.example.budget_buddie_sa.data.model.Category
+import com.example.budget_buddie_sa.viewmodel.CategoryViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class CategoryActivity : BaseNavigationActivity() {
 
-    private lateinit var database: AppDatabase
+    private lateinit var categoryViewModel: CategoryViewModel
     private lateinit var adapter: CategoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-        database = AppDatabase.getDatabase(this)
+        // Initialize ViewModel
+        categoryViewModel = ViewModelProvider(this).get(CategoryViewModel::class.java)
 
         supportActionBar?.title = "Categories"
 
@@ -32,30 +33,21 @@ class CategoryActivity : BaseNavigationActivity() {
         val btnAddCategory = findViewById<FloatingActionButton>(R.id.btnAddCategory)
 
         adapter = CategoryAdapter(emptyList()) { category ->
-            deleteCategory(category)
+            categoryViewModel.deleteCategory(category)
+            Toast.makeText(this, "Category deleted", Toast.LENGTH_SHORT).show()
         }
         rvCategories.layoutManager = LinearLayoutManager(this)
         rvCategories.adapter = adapter
 
-        observeCategories()
-
-        btnAddCategory.setOnClickListener {
-            showAddCategoryDialog()
-        }
-    }
-
-    private fun observeCategories() {
+        // Observe categories using the ViewModel's Flow
         lifecycleScope.launch {
-            database.categoryDao().getAllCategories().collectLatest { categories ->
+            categoryViewModel.allCategories.collectLatest { categories ->
                 adapter.updateData(categories)
             }
         }
-    }
 
-    private fun deleteCategory(category: Category) {
-        lifecycleScope.launch {
-            database.categoryDao().delete(category)
-            Toast.makeText(this@CategoryActivity, "Category deleted", Toast.LENGTH_SHORT).show()
+        btnAddCategory.setOnClickListener {
+            showAddCategoryDialog()
         }
     }
 
@@ -68,25 +60,13 @@ class CategoryActivity : BaseNavigationActivity() {
             .setPositiveButton("Add") { _, _ ->
                 val name = etCategoryName.text.toString().trim()
                 if (name.isNotEmpty()) {
-                    saveCategory(name)
+                    categoryViewModel.insertCategory(name)
+                    Toast.makeText(this, "Category added!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Please enter a name", Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
-    }
-
-    private fun saveCategory(name: String) {
-        val newCategory = Category(
-            name = name,
-            color = "#6200EE", // Default purple
-            iconName = "ic_category" // Default icon
-        )
-
-        lifecycleScope.launch {
-            database.categoryDao().insert(newCategory)
-            Toast.makeText(this@CategoryActivity, "Category added!", Toast.LENGTH_SHORT).show()
-        }
     }
 }

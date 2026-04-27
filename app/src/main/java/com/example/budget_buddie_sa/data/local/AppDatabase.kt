@@ -15,7 +15,7 @@ import com.example.budget_buddie_sa.data.model.User
  */
 @Database(
     entities = [Category::class, Expense::class, Budget::class, User::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
