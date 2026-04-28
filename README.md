@@ -113,7 +113,8 @@ git clone https://github.com/your-repo/budget-buddie-sa.git
 
 ## Demo Video
 
-> Coming soon.
+https://youtu.be/TnXcwW8aHzo
+
 
 ---
 
