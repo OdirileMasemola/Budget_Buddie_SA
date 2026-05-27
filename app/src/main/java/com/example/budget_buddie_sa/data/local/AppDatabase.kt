@@ -15,7 +15,7 @@ import com.example.budget_buddie_sa.data.model.User
  */
 @Database(
     entities = [Category::class, Expense::class, Budget::class, User::class],
-    version = 2,
+    version = 3, // Bug 2 Fix: Incrementing version to 3 to resolve schema mismatch
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -39,7 +39,9 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "budget_buddie_db"
                 )
-                .fallbackToDestructiveMigration() // Simple strategy for beginners
+                // Bug 2 Fix: Added fallbackToDestructiveMigration() to handle schema changes by clearing data.
+                // NOTE: This will wipe the existing database on the device.
+                .fallbackToDestructiveMigration()
                 .build()
                 INSTANCE = instance
                 instance

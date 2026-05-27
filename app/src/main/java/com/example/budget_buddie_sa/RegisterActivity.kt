@@ -1,8 +1,10 @@
 package com.example.budget_buddie_sa
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,14 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        // Bug 3 Fix: Programmatic scaled load for signup.png to prevent OutOfMemoryError
+        val imageView = findViewById<ImageView>(R.id.ivRegLogo)
+        val options = BitmapFactory.Options().apply {
+            inSampleSize = 4
+        }
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.signup, options)
+        imageView.setImageBitmap(bitmap)
 
         // Initialize ViewModel
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)

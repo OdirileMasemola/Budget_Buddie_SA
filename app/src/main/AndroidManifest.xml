@@ -11,7 +11,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Budget_Buddie_SA">
+        android:theme="@style/Theme.Budget_Buddie_SA"
+        android:largeHeap="true">
 
         <activity
             android:name=".LoginActivity"

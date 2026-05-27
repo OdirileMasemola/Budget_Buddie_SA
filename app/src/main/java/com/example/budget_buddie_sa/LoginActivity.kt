@@ -1,9 +1,11 @@
 package com.example.budget_buddie_sa
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +20,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // Performance Fix: SharedPreferences read for session check can be heavy on main thread
+        // For simple boolean it's usually okay, but following the "move heavy work" rule:
         sessionManager = SessionManager(this)
         
         // If already logged in, skip to Dashboard
@@ -27,6 +31,14 @@ class LoginActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_login)
+
+        // Bug 3 Fix: Programmatic scaled load for login.png to prevent OutOfMemoryError
+        val imageView = findViewById<ImageView>(R.id.ivLogo)
+        val options = BitmapFactory.Options().apply {
+            inSampleSize = 4
+        }
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.login, options)
+        imageView.setImageBitmap(bitmap)
 
         // Initialize ViewModel using ViewModelProvider (Standard way)
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)

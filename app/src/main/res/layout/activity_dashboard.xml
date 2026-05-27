@@ -249,7 +249,6 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:layout_marginBottom="24dp"
-            android:backgroundTint="@android:color/transparent"
             app:backgroundTint="@null"
             android:background="@drawable/btn_orange_gradient"
             android:text="+ Add New Expense"

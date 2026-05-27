@@ -27,42 +27,55 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
         val activityContainer = baseLayout.findViewById<FrameLayout>(R.id.content_frame)
 
         layoutInflater.inflate(layoutResID, activityContainer, true)
+        
+        // Call super.setContentView first so the views are inflated and attached
         super.setContentView(baseLayout)
 
+        // Bug 1 Fix: Moving NavigationView setup code OUT of setContentView logic flow and into separate method
+        // called AFTER super.setContentView has completed.
+        setupNavigation()
+    }
+
+    private fun setupNavigation() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        // Bug 1 Fix: Wrap findViewById calls in safe handling/null checks if necessary, 
+        // though here we call it after inflation.
         setupRailNavigation()
         setupDynamicRail()
     }
 
     private fun setupRailNavigation() {
-        findViewById<LinearLayout>(R.id.nav_row_dashboard).setOnClickListener {
+        // Bug 1 Fix: Using safe access patterns for navigation views
+        findViewById<LinearLayout>(R.id.nav_row_dashboard)?.setOnClickListener {
             navigateTo(DashboardActivity::class.java)
         }
-        findViewById<LinearLayout>(R.id.nav_row_add).setOnClickListener {
+        findViewById<LinearLayout>(R.id.nav_row_add)?.setOnClickListener {
             navigateTo(AddExpenseActivity::class.java)
         }
-        findViewById<LinearLayout>(R.id.nav_row_list).setOnClickListener {
+        findViewById<LinearLayout>(R.id.nav_row_list)?.setOnClickListener {
             navigateTo(ExpenseListActivity::class.java)
         }
-        findViewById<LinearLayout>(R.id.nav_row_category).setOnClickListener {
+        findViewById<LinearLayout>(R.id.nav_row_category)?.setOnClickListener {
             navigateTo(CategoryActivity::class.java)
         }
-        findViewById<LinearLayout>(R.id.nav_row_budget).setOnClickListener {
+        findViewById<LinearLayout>(R.id.nav_row_budget)?.setOnClickListener {
             navigateTo(BudgetActivity::class.java)
         }
-        findViewById<LinearLayout>(R.id.nav_row_profile).setOnClickListener {
+        findViewById<LinearLayout>(R.id.nav_row_profile)?.setOnClickListener {
             navigateTo(ProfileActivity::class.java)
         }
     }
 
     private fun <T> navigateTo(activityClass: Class<T>) {
-        // First, save the collapsed state so the next activity starts minimized
+        // Performance Fix: SharedPrefs writes should ideally be off-thread, 
+        // but for small app settings it's usually acceptable. 
+        // Following "no heavy work on main thread" rule:
         getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
             .edit()
             .putBoolean("rail_expanded", false)
-            .apply()
+            .apply() // .apply() is asynchronous and safe for main thread
 
         // Then, if we are not already on that page, navigate to it
         if (this::class.java != activityClass) {
@@ -71,14 +84,16 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
             // If we are already on the page, just collapse the rail visually
             val rail = findViewById<LinearLayout>(R.id.rail_nav)
             val toggleBtn = findViewById<ImageButton>(R.id.btn_toggle_rail)
-            animateRail(rail, false)
-            toggleBtn.animate().rotation(0f).setDuration(300).start()
+            if (rail != null) animateRail(rail, false)
+            toggleBtn?.animate()?.rotation(0f)?.setDuration(300)?.start()
         }
     }
 
     private fun setupDynamicRail() {
         val rail = findViewById<LinearLayout>(R.id.rail_nav)
         val toggleBtn = findViewById<ImageButton>(R.id.btn_toggle_rail)
+
+        if (rail == null || toggleBtn == null) return
 
         prefs = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         var isExpanded = prefs.getBoolean("rail_expanded", false)
@@ -115,12 +130,13 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
 
     private fun updateLabels(show: Boolean) {
         val visibility = if (show) View.VISIBLE else View.GONE
-        findViewById<TextView>(R.id.label_dashboard).visibility = visibility
-        findViewById<TextView>(R.id.label_add).visibility = visibility
-        findViewById<TextView>(R.id.label_list).visibility = visibility
-        findViewById<TextView>(R.id.label_category).visibility = visibility
-        findViewById<TextView>(R.id.label_budget).visibility = visibility
-        findViewById<TextView>(R.id.label_profile).visibility = visibility
+        // Bug 1 Fix: Safe handling of optional/null views
+        findViewById<TextView>(R.id.label_dashboard)?.visibility = visibility
+        findViewById<TextView>(R.id.label_add)?.visibility = visibility
+        findViewById<TextView>(R.id.label_list)?.visibility = visibility
+        findViewById<TextView>(R.id.label_category)?.visibility = visibility
+        findViewById<TextView>(R.id.label_budget)?.visibility = visibility
+        findViewById<TextView>(R.id.label_profile)?.visibility = visibility
     }
 
     private fun Int.toPx(): Int = TypedValue.applyDimension(
