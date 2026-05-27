@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light">
+    android:background="#FAFAFA"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,42 +13,79 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Summary Card -->
+        <!-- Section 1 — Top greeting header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Good morning 👋"
+                    android:textColor="#9B8EC0"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your Finance Summary"
+                    android:textColor="#2D1B6B"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/circle_surface" />
+        </LinearLayout>
+
+        <!-- Section 2 — Summary Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/purple_primary">
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="#7C3AED"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:foregroundTint="#FFFFFF"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="24dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Current Balance"
                     android:textColor="#CCFFFFFF"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/tvRemainingBudget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:text="R 5,250.00"
                     android:textColor="@color/white"
-                    android:textSize="32sp"
+                    android:textSize="34sp"
                     android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginVertical="12dp"
+                    android:layout_marginVertical="4dp"
                     android:background="#33FFFFFF" />
 
                 <LinearLayout
@@ -74,45 +112,163 @@
                             android:layout_height="wrap_content"
                             android:text="R 1,420.00"
                             android:textColor="@color/white"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <ProgressBar
-                        android:id="@+id/pbBudgetTracking"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="80dp"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:max="100"
-                        android:progress="65"
-                        android:progressTint="@color/orange_accent" />
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Budget Used"
+                            android:textColor="#CCFFFFFF"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="65%"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/pbBudgetTracking"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:layout_marginTop="16dp"
+                    android:max="100"
+                    android:progress="65"
+                    android:progressBackgroundTint="#33FFFFFF"
+                    android:progressTint="#F97316" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Quick Actions -->
-        <Button
+        <!-- Section 3 — Two stat mini-cards -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E8DFF8"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <View
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/circle_surface" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="This Month"
+                        android:textColor="#9B8EC0"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvMonthTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R 1,420"
+                        android:textColor="#2D1B6B"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E8DFF8"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <View
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/circle_surface" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Categories"
+                        android:textColor="#9B8EC0"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvCategoryCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5 Active"
+                        android:textColor="#2D1B6B"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Section 4 — Add Expense Button -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAddExpense"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="58dp"
             android:layout_marginBottom="24dp"
-            android:backgroundTint="@color/orange_accent"
-            android:text="Add New Expense"
+            android:backgroundTint="@android:color/transparent"
+            app:backgroundTint="@null"
+            android:background="@drawable/btn_orange_gradient"
+            android:text="+ Add New Expense"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:cornerRadius="12dp"
+            android:textStyle="bold"
+            app:cornerRadius="14dp"
             app:icon="@drawable/ic_add"
-            app:iconTint="@color/white" />
+            app:iconTint="@color/white"
+            app:iconGravity="textStart" />
 
-        <!-- Graph Section (Placeholder) -->
+        <!-- Section 5 — Spending Analysis -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:text="Spending Analysis"
-            android:textColor="@color/black"
+            android:textColor="#2D1B6B"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -120,16 +276,19 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardElevation="0dp"
+            app:strokeColor="#E8DFF8"
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <!-- Placeholder for actual Graph Library -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
@@ -139,14 +298,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:text="Weekly Spending Trend"
-                    android:textColor="@color/text_grey"
+                    android:textColor="#9B8EC0"
                     android:textSize="12sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Recent Transactions -->
+        <!-- Section 6 — Recent History -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -159,7 +318,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Recent History"
-                android:textColor="@color/black"
+                android:textColor="#2D1B6B"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -167,8 +326,8 @@
                 android:id="@+id/tvSeeAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="See All"
-                android:textColor="@color/purple_primary"
+                android:text="See all →"
+                android:textColor="#7C3AED"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -177,6 +336,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
+            tools:itemCount="3"
             tools:listitem="@layout/item_history_dummy" />
 
     </LinearLayout>

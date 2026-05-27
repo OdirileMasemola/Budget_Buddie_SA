@@ -4,174 +4,205 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_light"
+    android:background="#FAFAFA"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp">
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="40dp">
 
-        <!-- Logo Image -->
         <ImageView
             android:id="@+id/ivRegLogo"
             android:layout_width="180dp"
             android:layout_height="180dp"
             android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/signup"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Title -->
         <TextView
             android:id="@+id/tvRegTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="CREATE ACCOUNT"
-            android:textColor="@color/purple_primary"
+            android:layout_marginTop="12dp"
+            android:text="Create Account"
+            android:textColor="#2D1B6B"
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivRegLogo" />
 
-        <!-- First Name -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilFirstName"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="4dp"
+            android:text="Fill in your details to get started"
+            android:textColor="#9B8EC0"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvRegTitle" />
+
+        <LinearLayout
+            android:id="@+id/llNameRow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:hint="First Name"
+            android:orientation="horizontal"
+            android:weightSum="2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvRegTitle">
+            app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etFirstName"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilFirstName"
+                style="@style/OutlinedInput"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:hint="First Name">
 
-        <!-- Last Name -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilLastName"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Last Name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilFirstName">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:textColor="#2D1B6B" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etLastName"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilLastName"
+                style="@style/OutlinedInput"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:hint="Last Name">
 
-        <!-- Email -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:textColor="#2D1B6B" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilEmail"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/OutlinedInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="14dp"
             android:hint="Email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilLastName">
+            app:layout_constraintTop_toBottomOf="@id/llNameRow"
+            app:startIconDrawable="@drawable/ic_email"
+            app:startIconTint="#C4B8DC">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:textColor="#2D1B6B" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Username -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilRegUsername"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/OutlinedInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="14dp"
             android:hint="Username"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilEmail">
+            app:layout_constraintTop_toBottomOf="@id/tilEmail"
+            app:startIconDrawable="@drawable/ic_person"
+            app:startIconTint="#C4B8DC">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etRegUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="#2D1B6B" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Password -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilRegPassword"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/OutlinedInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="14dp"
             android:hint="Password"
-            app:passwordToggleEnabled="true"
+            app:endIconMode="password_toggle"
+            app:endIconTint="#9B8EC0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilRegUsername">
+            app:layout_constraintTop_toBottomOf="@id/tilRegUsername"
+            app:startIconDrawable="@drawable/ic_lock"
+            app:startIconTint="#C4B8DC">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etRegPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="#2D1B6B" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Confirm Password -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilConfirmPassword"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/OutlinedInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="14dp"
             android:hint="Confirm Password"
-            app:passwordToggleEnabled="true"
+            app:endIconMode="password_toggle"
+            app:endIconTint="#9B8EC0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilRegPassword">
+            app:layout_constraintTop_toBottomOf="@id/tilRegPassword"
+            app:startIconDrawable="@drawable/ic_lock"
+            app:startIconTint="#C4B8DC">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="#2D1B6B" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Register Button -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRegister"
             android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="@color/orange_accent"
-            android:text="Register"
+            android:layout_height="58dp"
+            android:layout_marginTop="28dp"
+            android:backgroundTint="@android:color/transparent"
+            app:backgroundTint="@null"
+            android:background="@drawable/btn_orange_gradient"
+            android:text="Create Account"
             android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:cornerRadius="12dp"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilConfirmPassword" />
 
-        <!-- Login Link -->
         <TextView
             android:id="@+id/tvLoginLink"
             android:layout_width="wrap_content"
@@ -179,12 +210,18 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:text="Already have an account? Login here"
-            android:textColor="@color/purple_primary"
-            android:textStyle="bold"
+            android:textColor="#9B8EC0"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnRegister" />
 
+        <!--
+            Note: Kotlin activity should apply a SpannableString to tvLoginLink
+            to color just "Login here" in #7C3AED bold and make it clickable.
+        -->
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.core.widget.NestedScrollView>

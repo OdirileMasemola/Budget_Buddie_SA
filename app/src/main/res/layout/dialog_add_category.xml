@@ -1,39 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_bg"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="32dp">
 
-    <TextView
+    <!-- Section 1 — Drag handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:background="#E8DFF8" />
+
+    <!-- Section 2 — Header row -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add New Category"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Category"
+            android:textColor="#2D1B6B"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:id="@+id/btnDismiss"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/circle_surface"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:contentDescription="Dismiss"
+                android:src="@drawable/ic_close"
+                app:tint="#9B8EC0" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Section 3 — Category name input -->
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilCategoryName"
+        style="@style/OutlinedInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:hint="Category Name"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginBottom="16dp">
+        app:startIconDrawable="@drawable/ic_tag"
+        app:startIconTint="#C4B8DC">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCategoryName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapWords" />
+            android:inputType="textCapWords"
+            android:textColor="#2D1B6B" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Section 4 — Color picker row -->
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="Pick a colour"
+        android:textColor="#2D1B6B"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Icon (Coming Soon)"
-        android:textSize="14sp"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"/>
+        android:layout_marginBottom="24dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/color_circle_selected" />
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/circle_shape"
+                android:backgroundTint="#F97316" />
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/circle_shape"
+                android:backgroundTint="#10B981" />
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/circle_shape"
+                android:backgroundTint="#3B82F6" />
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/circle_shape"
+                android:backgroundTint="#F43F5E" />
+
+            <View
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/circle_shape"
+                android:backgroundTint="#F59E0B" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Section 5 — Save button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSaveCategory"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/btn_orange_gradient"
+        app:backgroundTint="@null"
+        android:text="Save Category"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:cornerRadius="14dp" />
 
 </LinearLayout>
