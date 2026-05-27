@@ -17,7 +17,7 @@
         android:padding="16dp">
 
         <FrameLayout
-            android:id="@+id/iconContainer"
+            android:id="@+id/viewCategoryColor"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:background="@drawable/circle_surface"
@@ -26,6 +26,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/ivCategoryIcon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
@@ -44,8 +45,8 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tvEditSubtitle"
-            app:layout_constraintEnd_toStartOf="@+id/ivChevron"
-            app:layout_constraintStart_toEndOf="@+id/iconContainer"
+            app:layout_constraintEnd_toStartOf="@+id/ivDelete"
+            app:layout_constraintStart_toEndOf="@+id/viewCategoryColor"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Groceries" />
@@ -63,10 +64,10 @@
             app:layout_constraintTop_toBottomOf="@+id/tvCategoryName" />
 
         <ImageView
-            android:id="@+id/ivChevron"
+            android:id="@+id/ivDelete"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_chevron_right"
+            android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -20,6 +20,7 @@ class CategoryAdapter(
         val viewColor: View = view.findViewById(R.id.viewCategoryColor)
         val tvName: TextView = view.findViewById(R.id.tvCategoryName)
         val ivDelete: ImageView = view.findViewById(R.id.ivDelete)
+        val ivIcon: ImageView = view.findViewById(R.id.ivCategoryIcon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -32,9 +33,19 @@ class CategoryAdapter(
         holder.tvName.text = category.name
         
         try {
-            holder.viewColor.background.setColorFilter(Color.parseColor(category.color), PorterDuff.Mode.SRC_IN)
+            val color = Color.parseColor(category.color)
+            holder.viewColor.background.setColorFilter(color, PorterDuff.Mode.SRC_IN)
         } catch (e: Exception) {
             holder.viewColor.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN)
+        }
+
+        // Load icon by name from drawables
+        val context = holder.itemView.context
+        val iconResId = context.resources.getIdentifier(category.iconName, "drawable", context.packageName)
+        if (iconResId != 0) {
+            holder.ivIcon.setImageResource(iconResId)
+        } else {
+            holder.ivIcon.setImageResource(R.drawable.ic_category)
         }
 
         holder.ivDelete.setOnClickListener { onDeleteClick(category) }
