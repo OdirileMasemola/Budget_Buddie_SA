@@ -83,7 +83,7 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
         } else {
             // If we are already on the page, just collapse the rail visually
             val rail = findViewById<LinearLayout>(R.id.rail_nav)
-            val toggleBtn = findViewById<ImageButton>(R.id.btn_toggle_rail)
+            val toggleBtn = findViewById<LinearLayout>(R.id.btn_toggle_rail)
             if (rail != null) animateRail(rail, false)
             toggleBtn?.animate()?.rotation(0f)?.setDuration(300)?.start()
         }
@@ -91,7 +91,7 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
 
     private fun setupDynamicRail() {
         val rail = findViewById<LinearLayout>(R.id.rail_nav)
-        val toggleBtn = findViewById<ImageButton>(R.id.btn_toggle_rail)
+        val toggleBtn = findViewById<LinearLayout>(R.id.btn_toggle_rail)
 
         if (rail == null || toggleBtn == null) return
 

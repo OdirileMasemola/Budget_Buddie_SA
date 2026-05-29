@@ -8,6 +8,8 @@ import androidx.activity.viewModels
 import com.example.budget_buddie_sa.data.model.Category
 import com.example.budget_buddie_sa.data.model.Expense
 import com.example.budget_buddie_sa.viewmodel.ExpenseViewModel
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 import java.util.*
 
 /**
@@ -36,8 +38,8 @@ class AddExpenseActivity : BaseNavigationActivity() {
         val datePicker = findViewById<DatePicker>(R.id.datePicker)
         val spinnerCategory = findViewById<Spinner>(R.id.spinnerCategory)
         val etDescription = findViewById<EditText>(R.id.etDescription)
-        val btnUploadImage = findViewById<Button>(R.id.btnUploadImage)
-        val btnSaveExpense = findViewById<Button>(R.id.btnSaveExpense)
+        val btnUploadImage = findViewById<MaterialCardView>(R.id.btnUploadImage)
+        val btnSaveExpense = findViewById<MaterialButton>(R.id.btnSaveExpense)
 
         // Observe Categories from Database
         viewModel.allCategories.observe(this) { categories ->
