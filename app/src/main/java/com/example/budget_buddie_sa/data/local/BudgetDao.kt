@@ -18,6 +18,6 @@ interface BudgetDao {
     @Delete
     suspend fun delete(budget: Budget)
 
-    @Query("SELECT * FROM budgets LIMIT 1")
-    fun getBudget(): Flow<Budget?>
+    @Query("SELECT * FROM budgets WHERE userId = :userId LIMIT 1")
+    fun getBudgetForUser(userId: Int): Flow<Budget?>
 }

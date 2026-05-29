@@ -1,44 +1,36 @@
 package com.example.budget_buddie_sa.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import com.example.budget_buddie_sa.data.local.AppDatabase
+import androidx.lifecycle.*
+import com.example.budget_buddie_sa.BudgetApp
+import com.example.budget_buddie_sa.SessionManager
 import com.example.budget_buddie_sa.data.model.Category
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-/**
- * ViewModel for managing Categories.
- */
 class CategoryViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val categoryDao = AppDatabase.getDatabase(application).categoryDao()
+    private val repository = (application as BudgetApp).categoryRepository
+    private val sessionManager = SessionManager(application)
+    private val userId = sessionManager.getUserId()
 
-    // Expose categories as LiveData for easier lifecycle management in Activity
-    val allCategories: LiveData<List<Category>> = categoryDao.getAllCategories().asLiveData()
+    val allCategories: LiveData<List<Category>> = repository.getCategoriesForUser(userId).asLiveData()
 
-    fun insertCategory(name: String) {
-        val newCategory = Category(
-            name = name,
-            color = "#6200EE",
-            iconName = "ic_category"
-        )
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                categoryDao.insert(newCategory)
-            }
+    fun insertCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertCategory(category.copy(userId = userId))
+        }
+    }
+
+    fun updateCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateCategory(category)
         }
     }
 
     fun deleteCategory(category: Category) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                categoryDao.delete(category)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteCategory(category)
         }
     }
 }

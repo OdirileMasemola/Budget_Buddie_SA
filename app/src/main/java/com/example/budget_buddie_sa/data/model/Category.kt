@@ -5,13 +5,16 @@ import androidx.room.PrimaryKey
 
 /**
  * Represents a spending category (e.g., Food, Transport).
- * Uses a predefined icon resource name.
+ * Supports both color and image-based identification.
+ * Linked to a specific user.
  */
 @Entity(tableName = "categories")
 data class Category(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val userId: Int, // Link to User
     val name: String,
     val color: String, // Hex string
-    val iconName: String // Name of the drawable icon (e.g., "ic_food")
+    val imageUri: String? = null, // URI path for selected image from gallery
+    val iconName: String? = null // For default icons
 )

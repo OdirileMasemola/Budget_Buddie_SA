@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bottom_sheet_bg"
+    android:background="@drawable/bottom_sheet_rounded"
     android:orientation="vertical"
     android:paddingStart="24dp"
     android:paddingEnd="24dp"
@@ -13,14 +12,14 @@
 
     <!-- Section 1 — Drag handle -->
     <View
-        android:layout_width="40dp"
+        android:layout_width="44dp"
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="20dp"
-        android:background="#E8DFF8" />
+        android:background="@drawable/drag_handle_shape" />
 
-    <!-- Section 2 — Header row -->
+    <!-- Section 2 — Title row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,38 +31,29 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Add Category"
+            android:text="New Category"
             android:textColor="#2D1B6B"
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <FrameLayout
-            android:id="@+id/btnDismiss"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@drawable/circle_surface"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:contentDescription="Dismiss"
-                android:src="@drawable/ic_close"
-                app:tint="#9B8EC0" />
-        </FrameLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="#9B8EC0"
+            android:textSize="13sp" />
     </LinearLayout>
 
     <!-- Section 3 — Category name input -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilCategoryName"
         style="@style/OutlinedInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="20dp"
         android:hint="Category Name"
-        app:startIconDrawable="@drawable/ic_tag"
+        app:startIconDrawable="@drawable/ic_category"
         app:startIconTint="#C4B8DC">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -74,82 +64,183 @@
             android:textColor="#2D1B6B" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Section 4 — Color picker row -->
+    <!-- Section 4 — Color picker -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:text="Pick a colour"
+        android:letterSpacing="0.05"
+        android:text="Pick a Colour"
         android:textColor="#2D1B6B"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textStyle="bold" />
 
-    <HorizontalScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:scrollbars="none">
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/color1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="6dp"
+            android:background="@drawable/circle_red"
+            android:tag="#FF4444" />
+
+        <View
+            android:id="@+id/color2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="6dp"
+            android:background="@drawable/circle_blue"
+            android:tag="#33B5E5" />
+
+        <View
+            android:id="@+id/color3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="6dp"
+            android:background="@drawable/circle_green"
+            android:tag="#99CC00" />
+
+        <View
+            android:id="@+id/color4"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="6dp"
+            android:background="@drawable/circle_orange"
+            android:tag="#FFBB33" />
+
+        <View
+            android:id="@+id/color5"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="6dp"
+            android:background="@drawable/circle_purple"
+            android:tag="#AA66CC" />
+    </LinearLayout>
+
+    <!-- Section 5 — Image picker -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="OR Add an Icon"
+        android:textColor="#9B8EC0"
+        android:textSize="12sp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/btnPickImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="#FAFAFA"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#E8DFF8"
+        app:strokeWidth="1dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="14dp">
 
             <View
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/color_circle_selected" />
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/circle_light_purple" />
 
-            <View
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/circle_shape"
-                android:backgroundTint="#F97316" />
+            <!-- Using FrameLayout to center icon inside circle -->
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
 
-            <View
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/circle_shape"
-                android:backgroundTint="#10B981" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <View
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/circle_shape"
-                android:backgroundTint="#3B82F6" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose from Gallery"
+                    android:textColor="#2D1B6B"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-            <View
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/circle_shape"
-                android:backgroundTint="#F43F5E" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload a custom icon image"
+                    android:textColor="#9B8EC0"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-            <View
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/circle_shape"
-                android:backgroundTint="#F59E0B" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="#C4B8DC" />
         </LinearLayout>
-    </HorizontalScrollView>
 
-    <!-- Section 5 — Save button -->
-    <com.google.android.material.button.MaterialButton
+        <!-- Centering the icon over the circle background -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="23dp"
+            android:src="@drawable/ic_category"
+            app:tint="#7C3AED" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Section 6 — Image preview -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeColor="#E8DFF8"
+            app:strokeWidth="1dp">
+
+            <ImageView
+                android:id="@+id/ivSelectedPreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Section 7 — Save button -->
+    <Button
         android:id="@+id/btnSaveCategory"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="@drawable/btn_orange_gradient"
-        app:backgroundTint="@null"
         android:text="Save Category"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         android:textStyle="bold"
-        app:cornerRadius="14dp" />
+        app:backgroundTint="@null" />
 
 </LinearLayout>

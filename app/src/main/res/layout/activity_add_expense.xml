@@ -71,9 +71,7 @@
                     app:boxStrokeWidth="1.5dp"
                     app:boxStrokeWidthFocused="1.5dp"
                     app:hintTextColor="#CCFFFFFF"
-                    app:shapeAppearanceOverlay="@style/RoundedInput"
-                    app:startIconDrawable="@drawable/ic_currency"
-                    app:startIconTint="#FFFFFF">
+                    app:shapeAppearanceOverlay="@style/RoundedInput">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etAmount"

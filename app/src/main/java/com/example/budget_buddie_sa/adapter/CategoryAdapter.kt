@@ -2,6 +2,7 @@ package com.example.budget_buddie_sa.adapter
 
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.example.budget_buddie_sa.data.model.Category
 
 class CategoryAdapter(
     private var categories: List<Category>,
+    private val onItemClick: (Category) -> Unit,
     private val onDeleteClick: (Category) -> Unit
 ) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
@@ -32,22 +34,25 @@ class CategoryAdapter(
         val category = categories[position]
         holder.tvName.text = category.name
         
-        try {
-            val color = Color.parseColor(category.color)
-            holder.viewColor.background.setColorFilter(color, PorterDuff.Mode.SRC_IN)
-        } catch (e: Exception) {
-            holder.viewColor.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN)
-        }
-
-        // Load icon by name from drawables
-        val context = holder.itemView.context
-        val iconResId = context.resources.getIdentifier(category.iconName, "drawable", context.packageName)
-        if (iconResId != 0) {
-            holder.ivIcon.setImageResource(iconResId)
+        if (!category.imageUri.isNullOrEmpty()) {
+            // Display Image from URI
+            holder.ivIcon.visibility = View.VISIBLE
+            holder.ivIcon.setImageURI(Uri.parse(category.imageUri))
+            // Clear color filter if any
+            holder.viewColor.background.clearColorFilter()
         } else {
+            // Display Color and Icon
+            holder.ivIcon.visibility = View.VISIBLE
             holder.ivIcon.setImageResource(R.drawable.ic_category)
+            try {
+                val color = Color.parseColor(category.color)
+                holder.viewColor.background.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+            } catch (e: Exception) {
+                holder.viewColor.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN)
+            }
         }
 
+        holder.itemView.setOnClickListener { onItemClick(category) }
         holder.ivDelete.setOnClickListener { onDeleteClick(category) }
     }
 

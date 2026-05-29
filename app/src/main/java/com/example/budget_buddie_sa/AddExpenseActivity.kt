@@ -20,6 +20,7 @@ class AddExpenseActivity : BaseNavigationActivity() {
     private val viewModel: ExpenseViewModel by viewModels()
     private var selectedImageUri: String? = null
     private var categoryList: List<Category> = emptyList()
+    private lateinit var sessionManager: SessionManager
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
@@ -31,6 +32,9 @@ class AddExpenseActivity : BaseNavigationActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expense)
+
+        sessionManager = SessionManager(this)
+        val userId = sessionManager.getUserId()
 
         supportActionBar?.title = "Add Expense"
 
@@ -59,35 +63,51 @@ class AddExpenseActivity : BaseNavigationActivity() {
         }
 
         btnSaveExpense.setOnClickListener {
-            val amountStr = etAmount.text.toString()
-            val description = etDescription.text.toString()
+            val amountStr = etAmount.text.toString().trim()
+            val description = etDescription.text.toString().trim()
             val selectedCategoryIndex = spinnerCategory.selectedItemPosition
 
-            if (amountStr.isNotEmpty() && selectedCategoryIndex != -1 && categoryList.isNotEmpty()) {
-                val amount = amountStr.toDouble()
-                val calendar = Calendar.getInstance()
-                calendar.set(datePicker.year, datePicker.month, datePicker.dayOfMonth)
-                val date = calendar.timeInMillis
-                
-                val selectedCategory = categoryList[selectedCategoryIndex]
+            // Validation
+            if (amountStr.isEmpty()) {
+                etAmount.error = "Amount is required"
+                return@setOnClickListener
+            }
+            
+            val amount = amountStr.toDoubleOrNull() ?: 0.0
+            if (amount <= 0) {
+                etAmount.error = "Amount must be greater than zero"
+                return@setOnClickListener
+            }
 
-                val expense = Expense(
-                    amount = amount,
-                    date = date,
-                    description = description,
-                    categoryId = selectedCategory.id,
-                    receiptImage = selectedImageUri
-                )
+            if (description.isEmpty()) {
+                etDescription.error = "Description is required"
+                return@setOnClickListener
+            }
 
-                // Save using ViewModel
-                viewModel.addExpense(expense) {
-                    Toast.makeText(this, "Expense Saved Successfully!", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            } else if (categoryList.isEmpty()) {
-                Toast.makeText(this, "Please add a category first", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Please enter an amount", Toast.LENGTH_SHORT).show()
+            if (selectedCategoryIndex == -1 || categoryList.isEmpty()) {
+                Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val calendar = Calendar.getInstance()
+            calendar.set(datePicker.year, datePicker.month, datePicker.dayOfMonth)
+            val date = calendar.timeInMillis
+            
+            val selectedCategory = categoryList[selectedCategoryIndex]
+
+            val expense = Expense(
+                userId = userId,
+                amount = amount,
+                date = date,
+                description = description,
+                categoryId = selectedCategory.id,
+                receiptImage = selectedImageUri
+            )
+
+            // Save using ViewModel
+            viewModel.addExpense(expense) {
+                Toast.makeText(this, "Expense Saved Successfully!", Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
     }

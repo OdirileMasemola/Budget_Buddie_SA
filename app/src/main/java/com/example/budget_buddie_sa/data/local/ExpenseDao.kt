@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExpenseDao {
-    @Query("SELECT * FROM expenses ORDER BY date DESC")
-    fun getAllExpenses(): Flow<List<Expense>>
+    @Query("SELECT * FROM expenses WHERE userId = :userId ORDER BY date DESC")
+    fun getExpensesForUser(userId: Int): Flow<List<Expense>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExpense(expense: Expense)
@@ -15,6 +15,6 @@ interface ExpenseDao {
     @Delete
     suspend fun deleteExpense(expense: Expense)
 
-    @Query("SELECT SUM(amount) FROM expenses")
-    fun getTotalSpending(): Flow<Double?>
+    @Query("SELECT SUM(amount) FROM expenses WHERE userId = :userId")
+    fun getTotalSpendingForUser(userId: Int): Flow<Double?>
 }

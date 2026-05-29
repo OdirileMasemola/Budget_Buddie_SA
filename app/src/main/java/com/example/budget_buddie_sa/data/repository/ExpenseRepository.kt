@@ -9,8 +9,13 @@ import kotlinx.coroutines.flow.Flow
  */
 class ExpenseRepository(private val expenseDao: ExpenseDao) {
 
-    val allExpenses: Flow<List<Expense>> = expenseDao.getAllExpenses()
-    val totalSpending: Flow<Double?> = expenseDao.getTotalSpending()
+    fun getExpensesForUser(userId: Int): Flow<List<Expense>> {
+        return expenseDao.getExpensesForUser(userId)
+    }
+
+    fun getTotalSpendingForUser(userId: Int): Flow<Double?> {
+        return expenseDao.getTotalSpendingForUser(userId)
+    }
 
     suspend fun addExpense(expense: Expense) {
         expenseDao.insertExpense(expense)

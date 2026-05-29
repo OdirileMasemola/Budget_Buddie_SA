@@ -15,7 +15,7 @@ import com.example.budget_buddie_sa.data.model.User
  */
 @Database(
     entities = [Category::class, Expense::class, Budget::class, User::class],
-    version = 3, // Bug 2 Fix: Incrementing version to 3 to resolve schema mismatch
+    version = 4, // Incrementing version to 4 to resolve schema mismatch
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

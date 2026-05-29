@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey
 data class Budget(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val userId: Int, // Link to User
     val minAmount: Double,
     val maxAmount: Double
 )

@@ -29,9 +29,12 @@ class DashboardActivity : BaseNavigationActivity() {
 
         val tvTotalSpending = findViewById<TextView>(R.id.tvTotalSpending)
         val tvRemainingBudget = findViewById<TextView>(R.id.tvRemainingBudget)
+        val tvCategoryCount = findViewById<TextView>(R.id.tvCategoryCount)
+        val tvMonthTotal = findViewById<TextView>(R.id.tvMonthTotal)
         val pbBudgetTracking = findViewById<ProgressBar>(R.id.pbBudgetTracking)
         val btnAddExpense = findViewById<Button>(R.id.btnAddExpense)
         val rvRecentExpenses = findViewById<RecyclerView>(R.id.rvRecentExpenses)
+        val tvSeeAll = findViewById<TextView>(R.id.tvSeeAll)
 
         // Setup RecyclerView for recent transactions
         expenseAdapter = ExpenseAdapter(emptyList())
@@ -42,6 +45,7 @@ class DashboardActivity : BaseNavigationActivity() {
         viewModel.totalSpendingValue.observe(this) { spending ->
             val total = spending ?: 0.0
             tvTotalSpending.text = String.format(Locale.getDefault(), "R %.2f", total)
+            tvMonthTotal.text = String.format(Locale.getDefault(), "R %.2f", total)
         }
 
         // Observe Remaining Budget
@@ -53,6 +57,11 @@ class DashboardActivity : BaseNavigationActivity() {
         viewModel.spendingProgress.observe(this) { progress ->
             pbBudgetTracking.progress = progress
         }
+        
+        // Observe Category Count
+        viewModel.categoryCount.observe(this) { count ->
+            tvCategoryCount.text = "$count Active"
+        }
 
         // Observe Recent Expenses
         viewModel.recentExpenses.observe(this) { expenses ->
@@ -61,6 +70,10 @@ class DashboardActivity : BaseNavigationActivity() {
 
         btnAddExpense.setOnClickListener {
             startActivity(Intent(this, AddExpenseActivity::class.java))
+        }
+        
+        tvSeeAll.setOnClickListener {
+            startActivity(Intent(this, ExpenseListActivity::class.java))
         }
     }
 }

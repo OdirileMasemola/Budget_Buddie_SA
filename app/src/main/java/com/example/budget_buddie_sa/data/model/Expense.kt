@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * Represents an individual expense, linked to a Category.
+ * Represents an individual expense, linked to a Category and a User.
  */
 @Entity(
     tableName = "expenses",
@@ -15,17 +15,18 @@ import androidx.room.PrimaryKey
             entity = Category::class,
             parentColumns = ["id"],
             childColumns = ["categoryId"],
-            onDelete = ForeignKey.CASCADE // If a category is deleted, delete its expenses
+            onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["categoryId"])]
+    indices = [Index(value = ["categoryId"]), Index(value = ["userId"])]
 )
 data class Expense(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val userId: Int, // Link to User
     val amount: Double,
     val date: Long,
     val description: String,
-    val categoryId: Int, // Foreign key reference
-    val receiptImage: String? = null // Optional local path or URL
+    val categoryId: Int,
+    val receiptImage: String? = null
 )
