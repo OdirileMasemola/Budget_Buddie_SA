@@ -34,16 +34,28 @@ class CategoryAdapter(
         val category = categories[position]
         holder.tvName.text = category.name
         
+        // Requirement 1: Category image/icon display logic
         if (!category.imageUri.isNullOrEmpty()) {
-            // Display Image from URI
+            // User selected a custom image
             holder.ivIcon.visibility = View.VISIBLE
-            holder.ivIcon.setImageURI(Uri.parse(category.imageUri))
-            // Clear color filter if any
-            holder.viewColor.background.clearColorFilter()
+            try {
+                // Important: Use setImageURI for local gallery URIs
+                holder.ivIcon.setImageURI(Uri.parse(category.imageUri))
+                // When showing an image, we don't need the default tint
+                holder.ivIcon.imageTintList = null
+                // Show a neutral background or hide the color view filter
+                holder.viewColor.background.clearColorFilter()
+            } catch (e: Exception) {
+                // Fallback if image fails to load
+                holder.ivIcon.setImageResource(R.drawable.ic_category)
+            }
         } else {
-            // Display Color and Icon
+            // No image, use color block (Requirement 1)
             holder.ivIcon.visibility = View.VISIBLE
             holder.ivIcon.setImageResource(R.drawable.ic_category)
+            // Re-apply the purple tint for the default icon
+            holder.ivIcon.setColorFilter(Color.parseColor("#7C3AED"), PorterDuff.Mode.SRC_IN)
+
             try {
                 val color = Color.parseColor(category.color)
                 holder.viewColor.background.setColorFilter(color, PorterDuff.Mode.SRC_IN)

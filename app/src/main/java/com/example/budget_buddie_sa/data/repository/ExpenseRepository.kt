@@ -17,6 +17,10 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         return expenseDao.getTotalSpendingForUser(userId)
     }
 
+    fun getSpendingForPeriod(userId: Int, startDate: Long, endDate: Long): Flow<Double?> {
+        return expenseDao.getSpendingForPeriod(userId, startDate, endDate)
+    }
+
     suspend fun addExpense(expense: Expense) {
         expenseDao.insertExpense(expense)
     }

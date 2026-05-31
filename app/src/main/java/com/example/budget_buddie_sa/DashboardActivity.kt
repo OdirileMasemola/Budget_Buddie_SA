@@ -31,6 +31,7 @@ class DashboardActivity : BaseNavigationActivity() {
         val tvRemainingBudget = findViewById<TextView>(R.id.tvRemainingBudget)
         val tvCategoryCount = findViewById<TextView>(R.id.tvCategoryCount)
         val tvMonthTotal = findViewById<TextView>(R.id.tvMonthTotal)
+        val tvBudgetUsedPercent = findViewById<TextView>(R.id.tvBudgetUsedPercent)
         val pbBudgetTracking = findViewById<ProgressBar>(R.id.pbBudgetTracking)
         val btnAddExpense = findViewById<Button>(R.id.btnAddExpense)
         val rvRecentExpenses = findViewById<RecyclerView>(R.id.rvRecentExpenses)
@@ -45,6 +46,11 @@ class DashboardActivity : BaseNavigationActivity() {
         viewModel.totalSpendingValue.observe(this) { spending ->
             val total = spending ?: 0.0
             tvTotalSpending.text = String.format(Locale.getDefault(), "R %.2f", total)
+        }
+
+        // Observe This Month Spending
+        viewModel.thisMonthSpending.observe(this) { spending ->
+            val total = spending ?: 0.0
             tvMonthTotal.text = String.format(Locale.getDefault(), "R %.2f", total)
         }
 
@@ -53,9 +59,14 @@ class DashboardActivity : BaseNavigationActivity() {
             tvRemainingBudget.text = String.format(Locale.getDefault(), "R %.2f", remaining)
         }
 
-        // Observe Spending Progress
+        // Observe Spending Progress for Progress Bar
         viewModel.spendingProgress.observe(this) { progress ->
             pbBudgetTracking.progress = progress
+        }
+
+        // Observe Spending Percentage Text
+        viewModel.spendingPercentText.observe(this) { percent ->
+            tvBudgetUsedPercent.text = "$percent%"
         }
         
         // Observe Category Count

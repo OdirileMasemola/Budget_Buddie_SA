@@ -131,9 +131,10 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/tvBudgetUsedPercent"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="65%"
+                            android:text="0%"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -147,7 +148,7 @@
                     android:layout_height="6dp"
                     android:layout_marginTop="16dp"
                     android:max="100"
-                    android:progress="65"
+                    android:progress="0"
                     android:progressBackgroundTint="#33FFFFFF"
                     android:progressTint="#F97316" />
             </LinearLayout>
@@ -203,6 +204,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCategories"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -210,7 +212,9 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeColor="#E8DFF8"
-                app:strokeWidth="1dp">
+                app:strokeWidth="1dp"
+                android:clickable="true"
+                android:focusable="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"

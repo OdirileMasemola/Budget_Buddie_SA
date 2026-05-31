@@ -17,4 +17,7 @@ interface ExpenseDao {
 
     @Query("SELECT SUM(amount) FROM expenses WHERE userId = :userId")
     fun getTotalSpendingForUser(userId: Int): Flow<Double?>
+
+    @Query("SELECT SUM(amount) FROM expenses WHERE userId = :userId AND date >= :startDate AND date <= :endDate")
+    fun getSpendingForPeriod(userId: Int, startDate: Long, endDate: Long): Flow<Double?>
 }

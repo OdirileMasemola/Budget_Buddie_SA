@@ -7,7 +7,10 @@ import com.example.budget_buddie_sa.SessionManager
 import com.example.budget_buddie_sa.data.model.Budget
 import com.example.budget_buddie_sa.data.model.Expense
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import java.util.*
 
 /**
  * DashboardViewModel manages the data for the Dashboard screen.
@@ -39,17 +42,41 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
     ) { spending, budget ->
         val total = spending ?: 0.0
         val limit = budget?.maxAmount ?: 0.0
-        limit - total
+        if (limit == 0.0) 0.0 else limit - total
     }.asLiveData()
 
-    // Calculate spending progress percentage (0-100)
-    val spendingProgress: LiveData<Int> = combine(
+    // Real percentage for display (can be > 100)
+    val spendingPercentText: LiveData<Int> = combine(
         expenseRepo.getTotalSpendingForUser(userId),
         budgetRepo.getBudgetForUser(userId)
     ) { spending, budget ->
         val total = spending ?: 0.0
-        val limit = budget?.maxAmount ?: 1.0 // Avoid division by zero
-        ((total / limit) * 100).toInt().coerceIn(0, 100)
+        val limit = budget?.maxAmount ?: 0.0
+        if (limit == 0.0) 0 else ((total / limit) * 100).toInt()
+    }.asLiveData()
+
+    // Clamped percentage for progress bar (0-100)
+    val spendingProgress: LiveData<Int> = spendingPercentText.map { percent ->
+        percent.coerceIn(0, 100)
+    }
+
+    // This Month total logic
+    val thisMonthSpending: LiveData<Double?> = flow {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val startOfMonth = calendar.timeInMillis
+        
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        val endOfMonth = calendar.timeInMillis
+        
+        emitAll(expenseRepo.getSpendingForPeriod(userId, startOfMonth, endOfMonth))
     }.asLiveData()
     
     // Category count for stats

@@ -1,5 +1,6 @@
 package com.example.budget_buddie_sa
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,6 +30,14 @@ class CategoryActivity : BaseNavigationActivity() {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
+            // Take persistable URI permission to ensure the image still displays after app restart
+            val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            try {
+                contentResolver.takePersistableUriPermission(uri, flag)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
             tempSelectedImageUri = uri.toString()
             ivPreview?.visibility = View.VISIBLE
             ivPreview?.setImageURI(uri)

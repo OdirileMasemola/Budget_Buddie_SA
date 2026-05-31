@@ -64,9 +64,10 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/tvCurrentBudgetRange"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="R 1,000 — R 8,000"
+                    tools:text="R 0 — R 0"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -78,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
                     android:max="100"
-                    android:progress="50"
+                    android:progress="0"
                     android:progressTint="#F97316"
                     android:progressBackgroundTint="#33FFFFFF" />
 

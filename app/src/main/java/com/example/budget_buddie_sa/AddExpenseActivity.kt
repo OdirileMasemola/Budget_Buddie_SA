@@ -1,5 +1,6 @@
 package com.example.budget_buddie_sa
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
@@ -44,6 +45,7 @@ class AddExpenseActivity : BaseNavigationActivity() {
         val etDescription = findViewById<EditText>(R.id.etDescription)
         val btnUploadImage = findViewById<MaterialCardView>(R.id.btnUploadImage)
         val btnSaveExpense = findViewById<MaterialButton>(R.id.btnSaveExpense)
+        val tvManageCategories = findViewById<TextView>(R.id.tvManageCategories)
 
         // Observe Categories from Database
         viewModel.allCategories.observe(this) { categories ->
@@ -60,6 +62,10 @@ class AddExpenseActivity : BaseNavigationActivity() {
 
         btnUploadImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        tvManageCategories.setOnClickListener {
+            startActivity(Intent(this, CategoryActivity::class.java))
         }
 
         btnSaveExpense.setOnClickListener {
