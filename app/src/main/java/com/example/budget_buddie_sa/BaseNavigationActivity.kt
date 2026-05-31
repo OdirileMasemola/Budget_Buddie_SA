@@ -2,6 +2,8 @@ package com.example.budget_buddie_sa
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -25,14 +27,43 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
         setupNavigation()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_profile -> {
+                startActivity(Intent(this, ProfileActivity::class.java))
+                true
+            }
+            R.id.action_logout -> {
+                val sessionManager = SessionManager(this)
+                sessionManager.clearSession()
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+                true
+            }
+            // Add other actions (badges, reports, settings) if activities exist
+            R.id.action_settings -> {
+                startActivity(Intent(this, BudgetActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun setupNavigation() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         // Show back button for activities that are NOT main navigation targets
-        val isMainTarget = this is DashboardActivity || this is AddExpenseActivity || 
+        val isMainTarget = this is DashboardActivity || 
                           this is ExpenseListActivity || this is BudgetActivity || 
-                          this is ProfileActivity
+                          this is CategoryActivity
         
         if (!isMainTarget) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -44,12 +75,11 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
         // Highlight the correct item based on the current activity
         when (this) {
             is DashboardActivity -> bottomNav.selectedItemId = R.id.nav_dashboard
-            is AddExpenseActivity -> bottomNav.selectedItemId = R.id.nav_add_expense
             is ExpenseListActivity -> bottomNav.selectedItemId = R.id.nav_history
+            is CategoryActivity -> bottomNav.selectedItemId = R.id.nav_categories
             is BudgetActivity -> bottomNav.selectedItemId = R.id.nav_budget
-            is ProfileActivity -> bottomNav.selectedItemId = R.id.nav_profile
             else -> {
-                // For sub-screens like CategoryActivity, we might want to uncheck all items
+                // For sub-screens, we might want to uncheck all items
                 bottomNav.menu.setGroupCheckable(0, true, false)
                 for (i in 0 until bottomNav.menu.size()) {
                     bottomNav.menu.getItem(i).isChecked = false
@@ -61,10 +91,9 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item ->
             val targetActivity = when (item.itemId) {
                 R.id.nav_dashboard -> DashboardActivity::class.java
-                R.id.nav_add_expense -> AddExpenseActivity::class.java
                 R.id.nav_history -> ExpenseListActivity::class.java
+                R.id.nav_categories -> CategoryActivity::class.java
                 R.id.nav_budget -> BudgetActivity::class.java
-                R.id.nav_profile -> ProfileActivity::class.java
                 else -> null
             }
 

@@ -70,68 +70,8 @@ class CategoryActivity : BaseNavigationActivity() {
         }
 
         btnAddCategory.setOnClickListener {
-            showAddCategoryDialog()
+            startActivity(Intent(this, AddCategoryActivity::class.java))
         }
-    }
-
-    private fun showAddCategoryDialog() {
-        tempSelectedImageUri = null
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_category, null)
-        val etCategoryName = dialogView.findViewById<EditText>(R.id.etCategoryName)
-        val btnPickImage = dialogView.findViewById<MaterialCardView>(R.id.btnPickImage)
-        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancel)
-        ivPreview = dialogView.findViewById(R.id.ivSelectedPreview)
-
-        var selectedColor = "#7C3AED" // Default Purple
-
-        val dialog = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .setPositiveButton("Add") { _, _ ->
-                val name = etCategoryName.text.toString().trim()
-                if (name.isNotEmpty()) {
-                    val category = Category(
-                        userId = 0, // Will be set in ViewModel
-                        name = name,
-                        color = selectedColor,
-                        imageUri = tempSelectedImageUri
-                    )
-                    categoryViewModel.insertCategory(category)
-                    Toast.makeText(this, "Category added!", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Please enter a name", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .setNegativeButton("Cancel", null)
-            .create()
-
-        btnCancel.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        val colorViews = listOf(
-            dialogView.findViewById<View>(R.id.color1),
-            dialogView.findViewById<View>(R.id.color2),
-            dialogView.findViewById<View>(R.id.color3),
-            dialogView.findViewById<View>(R.id.color4),
-            dialogView.findViewById<View>(R.id.color5)
-        )
-
-        colorViews.forEach { view ->
-            view.setOnClickListener {
-                selectedColor = it.tag.toString()
-                colorViews.forEach { v -> v.alpha = 0.5f }
-                it.alpha = 1.0f
-                // Clear image if color is picked? Requirement says OR but better to be clear.
-                tempSelectedImageUri = null
-                ivPreview?.visibility = View.GONE
-            }
-        }
-
-        btnPickImage.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
-
-        dialog.show()
     }
 
     private fun showEditCategoryDialog(category: Category) {

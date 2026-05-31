@@ -255,7 +255,7 @@
             android:layout_marginBottom="24dp"
             app:backgroundTint="@null"
             android:background="@drawable/btn_orange_gradient"
-            android:text="+ Add New Expense"
+            android:text=" Add New Expense"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
