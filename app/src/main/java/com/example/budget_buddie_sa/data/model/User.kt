@@ -5,14 +5,14 @@ import androidx.room.PrimaryKey
 
 /**
  * Represents a user of the application.
+ * Updated to use Firebase UID as String.
  */
 @Entity(tableName = "users")
 data class User(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val username: String,
+    @PrimaryKey
+    val id: String, // Firebase UID
+    val username: String = "",
     val firstName: String = "",
     val lastName: String = "",
-    val email: String = "",
-    val password: String // In a real app, this should be hashed
+    val email: String = ""
 )

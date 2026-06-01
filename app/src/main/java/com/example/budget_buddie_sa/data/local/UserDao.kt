@@ -22,7 +22,7 @@ interface UserDao {
     suspend fun getUserByUsername(username: String): User?
 
     @Query("SELECT * FROM users WHERE id = :userId LIMIT 1")
-    suspend fun getUserById(userId: Int): User?
+    suspend fun getUserById(userId: String): User?
 
     @Query("SELECT * FROM users LIMIT 1")
     suspend fun getCurrentUser(): User?

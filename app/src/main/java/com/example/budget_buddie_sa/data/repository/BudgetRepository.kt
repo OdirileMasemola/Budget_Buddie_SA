@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
  */
 class BudgetRepository(private val budgetDao: BudgetDao) {
 
-    fun getBudgetForUser(userId: Int): Flow<Budget?> {
+    fun getBudgetForUser(userId: String): Flow<Budget?> {
         return budgetDao.getBudgetForUser(userId)
     }
 

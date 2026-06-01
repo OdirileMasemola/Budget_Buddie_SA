@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 /**
  * Base Activity that handles common navigation using a BottomNavigationView.
@@ -41,6 +42,8 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
             R.id.action_logout -> {
                 val sessionManager = SessionManager(this)
                 sessionManager.clearSession()
+                // Also sign out from Firebase
+                FirebaseAuth.getInstance().signOut()
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)

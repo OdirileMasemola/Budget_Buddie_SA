@@ -9,22 +9,40 @@ import com.example.budget_buddie_sa.data.model.Expense
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for managing Expenses
+ * Updated to use String userId
+ */
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
     
     private val expenseRepository = (application as BudgetApp).expenseRepository
     private val categoryRepository = (application as BudgetApp).categoryRepository
     private val sessionManager = SessionManager(application)
-    private val userId = sessionManager.getUserId()
+    private val userId: String = sessionManager.getUserId() ?: ""
 
-    val allExpenses: LiveData<List<Expense>> = expenseRepository.getExpensesForUser(userId).asLiveData()
-    val allCategories: LiveData<List<Category>> = categoryRepository.getCategoriesForUser(userId).asLiveData()
-    val totalSpending: LiveData<Double?> = expenseRepository.getTotalSpendingForUser(userId).asLiveData()
+    val allExpenses: LiveData<List<Expense>> = if (userId.isNotEmpty()) {
+        expenseRepository.getExpensesForUser(userId).asLiveData()
+    } else {
+        MutableLiveData(emptyList())
+    }
+    
+    val allCategories: LiveData<List<Category>> = if (userId.isNotEmpty()) {
+        categoryRepository.getCategoriesForUser(userId).asLiveData()
+    } else {
+        MutableLiveData(emptyList())
+    }
+    
+    val totalSpending: LiveData<Double?> = if (userId.isNotEmpty()) {
+        expenseRepository.getTotalSpendingForUser(userId).asLiveData()
+    } else {
+        MutableLiveData(0.0)
+    }
 
     fun addExpense(expense: Expense, onComplete: () -> Unit) {
+        if (userId.isEmpty()) return
         viewModelScope.launch(Dispatchers.IO) {
-            // Ensure userId is set
             val expenseToSave = expense.copy(userId = userId)
-            expenseRepository.addExpense(expenseToSave)
+            expenseRepository.insertExpense(expenseToSave)
             launch(Dispatchers.Main) {
                 onComplete()
             }

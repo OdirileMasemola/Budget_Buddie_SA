@@ -119,27 +119,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilRegUsername"
-            style="@style/OutlinedInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:hint="Username"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilEmail"
-            app:startIconDrawable="@drawable/ic_person"
-            app:startIconTint="#C4B8DC">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etRegUsername"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:textColor="#2D1B6B" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilRegPassword"
             style="@style/OutlinedInput"
             android:layout_width="0dp"
@@ -150,7 +129,7 @@
             app:endIconTint="#9B8EC0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilRegUsername"
+            app:layout_constraintTop_toBottomOf="@id/tilEmail"
             app:startIconDrawable="@drawable/ic_lock"
             app:startIconTint="#C4B8DC">
 
@@ -203,6 +182,40 @@
             app:layout_constraintTop_toBottomOf="@id/tilConfirmPassword" />
 
         <TextView
+            android:id="@+id/tvDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="OR"
+            android:textColor="#9B8EC0"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoogleSignUp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="58dp"
+            android:layout_marginTop="16dp"
+            android:text="Sign up with Google"
+            android:textAllCaps="false"
+            android:textColor="#2D1B6B"
+            android:textSize="16sp"
+            app:cornerRadius="14dp"
+            app:icon="@drawable/ic_google"
+            app:iconGravity="textStart"
+            app:iconPadding="12dp"
+            app:iconTint="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDivider"
+            app:strokeColor="#E2D7F3"
+            app:strokeWidth="1.5dp" />
+
+        <TextView
             android:id="@+id/tvLoginLink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -214,7 +227,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+            app:layout_constraintTop_toBottomOf="@id/btnGoogleSignUp" />
 
         <!--
             Note: Kotlin activity should apply a SpannableString to tvLoginLink

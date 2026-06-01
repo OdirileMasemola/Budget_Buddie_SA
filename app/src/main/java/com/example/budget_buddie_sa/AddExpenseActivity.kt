@@ -35,7 +35,7 @@ class AddExpenseActivity : BaseNavigationActivity() {
         setContentView(R.layout.activity_add_expense)
 
         sessionManager = SessionManager(this)
-        val userId = sessionManager.getUserId()
+        val userId = sessionManager.getUserId() ?: ""
 
         supportActionBar?.title = "Add Expense"
 

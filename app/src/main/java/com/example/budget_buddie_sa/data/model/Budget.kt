@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
 data class Budget(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val userId: Int, // Link to User
+    val userId: String, // Updated to Firebase UID String
     val minAmount: Double,
     val maxAmount: Double
 )

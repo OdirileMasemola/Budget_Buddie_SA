@@ -23,7 +23,7 @@ import androidx.room.PrimaryKey
 data class Expense(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val userId: Int, // Link to User
+    val userId: String, // Updated to Firebase UID String
     val amount: Double,
     val date: Long,
     val description: String,

@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Budget_Buddie_SA</string>
     <string name="title_dashboard">Dashboard</string>
+    <!-- Replace with your actual web client ID from Firebase if not using google-services plugin -->
+    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID.apps.googleusercontent.com</string>
 </resources>

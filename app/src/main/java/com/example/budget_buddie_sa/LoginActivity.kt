@@ -3,25 +3,36 @@ package com.example.budget_buddie_sa
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetCredentialResponse
+import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.budget_buddie_sa.viewmodel.AuthViewModel
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import kotlinx.coroutines.launch
 
+/**
+ * Login screen supporting Email/Password and Google Sign-In via Credential Manager.
+ */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var credentialManager: CredentialManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Performance Fix: SharedPreferences read for session check can be heavy on main thread
-        // For simple boolean it's usually okay, but following the "move heavy work" rule:
         sessionManager = SessionManager(this)
         
         // If already logged in, skip to Dashboard
@@ -31,34 +42,30 @@ class LoginActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_login)
+        credentialManager = CredentialManager.create(this)
 
-        // Bug 3 Fix: Programmatic scaled load for login.png to prevent OutOfMemoryError
         val imageView = findViewById<ImageView>(R.id.ivLogo)
-        val options = BitmapFactory.Options().apply {
-            inSampleSize = 4
-        }
+        val options = BitmapFactory.Options().apply { inSampleSize = 4 }
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.login, options)
         imageView.setImageBitmap(bitmap)
 
-        // Initialize ViewModel using ViewModelProvider (Standard way)
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
-        val etUsername = findViewById<EditText>(R.id.etUsername)
+        val etEmail = findViewById<EditText>(R.id.etUsername) // Using etUsername for Email
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnGoogleSignIn = findViewById<Button>(R.id.btnGoogleSignIn)
         val tvRegisterLink = findViewById<TextView>(R.id.tvRegisterLink)
 
-        // Observe authentication state from ViewModel
+        // Observe authentication state
         authViewModel.authState.observe(this) { result ->
             when (result) {
                 is AuthViewModel.AuthResult.Success -> {
-                    // Save session and navigate
                     sessionManager.saveSession(result.user.id)
                     Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                     navigateToDashboard()
                 }
                 is AuthViewModel.AuthResult.Error -> {
-                    // Show error message
                     Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                 }
                 else -> {} 
@@ -66,21 +73,64 @@ class LoginActivity : AppCompatActivity() {
         }
 
         btnLogin.setOnClickListener {
-            val username = etUsername.text.toString().trim()
+            val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
-            if (username.isEmpty() || password.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please enter all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Please enter a valid email", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-            // Call login logic in ViewModel (Off-main-thread)
-            authViewModel.login(username, password)
+            authViewModel.login(email, password)
+        }
+
+        btnGoogleSignIn.setOnClickListener {
+            signInWithGoogle()
         }
 
         tvRegisterLink.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun signInWithGoogle() {
+        // Build Google ID Option
+        val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(false)
+            .setServerClientId(getString(R.string.default_web_client_id)) // Automatically provided by google-services plugin
+            .build()
+
+        val request: GetCredentialRequest = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        lifecycleScope.launch {
+            try {
+                val result = credentialManager.getCredential(
+                    request = request,
+                    context = this@LoginActivity
+                )
+                handleSignIn(result)
+            } catch (e: GetCredentialException) {
+                Log.e("LoginActivity", "Google Sign-In Error: ${e.message}")
+                Toast.makeText(this@LoginActivity, "Google Sign-In failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun handleSignIn(result: GetCredentialResponse) {
+        val credential = result.credential
+        if (credential is GoogleIdTokenCredential) {
+            val idToken = credential.idToken
+            authViewModel.loginWithGoogle(idToken)
+        } else {
+            Log.e("LoginActivity", "Unexpected credential type")
         }
     }
 
