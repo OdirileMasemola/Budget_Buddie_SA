@@ -101,8 +101,19 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         }
     }
     
-    fun logout() {
+    fun logout(credentialManager: androidx.credentials.CredentialManager? = null) {
         firebaseAuth.signOut()
         sessionManager.clearSession()
+        
+        // Requirement 1: Logout from Google Credential Manager state
+        if (credentialManager != null) {
+            viewModelScope.launch {
+                try {
+                    credentialManager.clearCredentialState(androidx.credentials.ClearCredentialStateRequest())
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 }

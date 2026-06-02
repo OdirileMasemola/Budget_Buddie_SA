@@ -6,7 +6,9 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.budget_buddie_sa.viewmodel.ProfileViewModel
+import kotlinx.coroutines.launch
 
 class ProfileActivity : BaseNavigationActivity() {
 
@@ -82,12 +84,18 @@ class ProfileActivity : BaseNavigationActivity() {
         // profileViewModel.fetchUserProfile()
 
         btnLogout.setOnClickListener {
-            // Logout from Firebase and clear local session
-            profileViewModel.logout()
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
+            // Requirement 1: Logout from Firebase and clear Google credentials
+            val credentialManager = androidx.credentials.CredentialManager.create(this)
+            
+            // Launch in coroutine as clearCredentialState is a suspend function
+            lifecycleScope.launch {
+                profileViewModel.logout(credentialManager)
+                
+                val intent = Intent(this@ProfileActivity, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            }
         }
     }
 }

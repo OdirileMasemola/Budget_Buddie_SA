@@ -21,8 +21,15 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.launch
 
+import java.security.MessageDigest
+import java.util.UUID
+
 /**
  * Login screen supporting Email/Password and Google Sign-In via Credential Manager.
+ * NOTE: For Google Sign-In to work on a physical device, you MUST:
+ * 1. Go to Firebase Console -> Project Settings.
+ * 2. Add your SHA-1 and SHA-256 fingerprints (Get them by running './gradlew signingReport').
+ * 3. Enable Google Sign-In in Firebase Auth -> Sign-in method.
  */
 class LoginActivity : AppCompatActivity() {
 
@@ -100,10 +107,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signInWithGoogle() {
-        // Build Google ID Option
+        // Requirement 1: Build Google ID Option with better security
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
-            .setServerClientId(getString(R.string.default_web_client_id)) // Automatically provided by google-services plugin
+            .setServerClientId(getString(R.string.default_web_client_id))
+            .setAutoSelectEnabled(true)
             .build()
 
         val request: GetCredentialRequest = GetCredentialRequest.Builder()
@@ -118,8 +126,14 @@ class LoginActivity : AppCompatActivity() {
                 )
                 handleSignIn(result)
             } catch (e: GetCredentialException) {
+                // Requirement 1: Proper error messages
                 Log.e("LoginActivity", "Google Sign-In Error: ${e.message}")
-                Toast.makeText(this@LoginActivity, "Google Sign-In failed", Toast.LENGTH_SHORT).show()
+                val message = when (e.type) {
+                    "android.credentials.GetCredentialException.TYPE_USER_CANCELED" -> "Login cancelled"
+                    "android.credentials.GetCredentialException.TYPE_NO_CREDENTIAL" -> "No Google accounts found"
+                    else -> "Google Sign-In failed: ${e.message}"
+                }
+                Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
             }
         }
     }

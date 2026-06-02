@@ -7,14 +7,29 @@ import android.view.MenuItem
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 /**
  * Base Activity that handles common navigation using a BottomNavigationView.
  * Other activities should extend this class to have the bottom navigation bar.
  */
 abstract class BaseNavigationActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        // Requirement 7: Check if user is logged in
+        val sessionManager = SessionManager(this)
+        if (!sessionManager.isLoggedIn()) {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
+    }
 
     override fun setContentView(layoutResID: Int) {
         val baseLayout = layoutInflater.inflate(R.layout.activity_base_nav, null)
@@ -42,8 +57,18 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
             R.id.action_logout -> {
                 val sessionManager = SessionManager(this)
                 sessionManager.clearSession()
-                // Also sign out from Firebase
+                // Also sign out from Firebase and Google
                 FirebaseAuth.getInstance().signOut()
+                
+                val credentialManager = androidx.credentials.CredentialManager.create(this)
+                lifecycleScope.launch {
+                    try {
+                        credentialManager.clearCredentialState(androidx.credentials.ClearCredentialStateRequest())
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
@@ -70,7 +95,7 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
         
         if (!isMainTarget) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            toolbar.setNavigationOnClickListener { onBackPressed() }
+            toolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
         }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)

@@ -34,7 +34,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 val result = auth.signInWithEmailAndPassword(email, password).await()
                 val firebaseUser = result.user
                 if (firebaseUser != null) {
-                    // Sync with local Room DB
+                    // Requirement 2: Success navigation is handled by Activity observing Success
                     var localUser = withContext(Dispatchers.IO) {
                         userDao.getUserById(firebaseUser.uid)
                     }
@@ -50,10 +50,16 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     }
                     _authState.value = AuthResult.Success(localUser!!)
                 } else {
-                    _authState.value = AuthResult.Error("Login failed: User null")
+                    _authState.value = AuthResult.Error("Login failed: User not found")
                 }
             } catch (e: Exception) {
-                _authState.value = AuthResult.Error("Login Error: ${e.message}")
+                // Requirement 2: Show clear messages
+                val errorMessage = when (e) {
+                    is com.google.firebase.auth.FirebaseAuthInvalidUserException -> "No account found with this email."
+                    is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException -> "Incorrect password."
+                    else -> "Login Error: ${e.localizedMessage}"
+                }
+                _authState.value = AuthResult.Error(errorMessage)
             }
         }
     }
@@ -77,10 +83,15 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     withContext(Dispatchers.IO) {
                         userDao.insert(newUser)
                     }
-                    _authState.value = AuthResult.RegisterSuccess
+                    // Requirement 2: After register, also login the user in SessionManager
+                    _authState.value = AuthResult.Success(newUser)
                 }
             } catch (e: Exception) {
-                _authState.value = AuthResult.Error("Registration Failed: ${e.message}")
+                val errorMessage = when (e) {
+                    is com.google.firebase.auth.FirebaseAuthUserCollisionException -> "This email is already registered."
+                    else -> "Registration Failed: ${e.localizedMessage}"
+                }
+                _authState.value = AuthResult.Error(errorMessage)
             }
         }
     }
@@ -95,7 +106,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 val result = auth.signInWithCredential(credential).await()
                 val firebaseUser = result.user
                 if (firebaseUser != null) {
-                    // Sync with local Room DB
+                    // Requirement 1: If Google user is new, create Room profile. If exists, load it.
                     var localUser = withContext(Dispatchers.IO) {
                         userDao.getUserById(firebaseUser.uid)
                     }
@@ -105,16 +116,26 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                             firstName = firebaseUser.displayName?.split(" ")?.getOrNull(0) ?: "",
                             lastName = firebaseUser.displayName?.split(" ")?.getOrNull(1) ?: "",
                             email = firebaseUser.email ?: "",
-                            username = firebaseUser.displayName ?: firebaseUser.email?.split("@")?.get(0) ?: "User"
+                            username = firebaseUser.displayName ?: firebaseUser.email?.split("@")?.get(0) ?: "GoogleUser"
                         )
                         withContext(Dispatchers.IO) {
                             userDao.insert(localUser!!)
                         }
+                    } else {
+                        // User exists, maybe update email/name if changed
+                        val updatedUser = localUser.copy(
+                            email = firebaseUser.email ?: localUser.email,
+                            username = firebaseUser.displayName ?: localUser.username
+                        )
+                        withContext(Dispatchers.IO) {
+                            userDao.update(updatedUser)
+                        }
+                        localUser = updatedUser
                     }
                     _authState.value = AuthResult.Success(localUser!!)
                 }
             } catch (e: Exception) {
-                _authState.value = AuthResult.Error("Google Login Failed: ${e.message}")
+                _authState.value = AuthResult.Error("Google Login Failed: ${e.localizedMessage}")
             }
         }
     }

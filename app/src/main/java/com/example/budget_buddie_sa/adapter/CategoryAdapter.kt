@@ -1,5 +1,6 @@
 package com.example.budget_buddie_sa.adapter
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.net.Uri
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.budget_buddie_sa.ImagePreviewActivity
 import com.example.budget_buddie_sa.R
 import com.example.budget_buddie_sa.data.model.Category
 
@@ -34,27 +36,31 @@ class CategoryAdapter(
         val category = categories[position]
         holder.tvName.text = category.name
         
-        // Requirement 1: Category image/icon display logic
+        // Requirement 1 & 5: Category image/icon display logic
         if (!category.imageUri.isNullOrEmpty()) {
             // User selected a custom image
             holder.ivIcon.visibility = View.VISIBLE
             try {
-                // Important: Use setImageURI for local gallery URIs
                 holder.ivIcon.setImageURI(Uri.parse(category.imageUri))
-                // When showing an image, we don't need the default tint
                 holder.ivIcon.imageTintList = null
-                // Show a neutral background or hide the color view filter
                 holder.viewColor.background.clearColorFilter()
+                
+                // Requirement 4: Click to expand
+                holder.ivIcon.setOnClickListener {
+                    val intent = Intent(holder.itemView.context, ImagePreviewActivity::class.java)
+                    intent.putExtra("image_uri", category.imageUri)
+                    holder.itemView.context.startActivity(intent)
+                }
             } catch (e: Exception) {
-                // Fallback if image fails to load
                 holder.ivIcon.setImageResource(R.drawable.ic_category)
+                holder.ivIcon.setOnClickListener(null)
             }
         } else {
-            // No image, use color block (Requirement 1)
+            // No image, use color block (Requirement 1 & 5)
             holder.ivIcon.visibility = View.VISIBLE
             holder.ivIcon.setImageResource(R.drawable.ic_category)
-            // Re-apply the purple tint for the default icon
             holder.ivIcon.setColorFilter(Color.parseColor("#7C3AED"), PorterDuff.Mode.SRC_IN)
+            holder.ivIcon.setOnClickListener(null)
 
             try {
                 val color = Color.parseColor(category.color)

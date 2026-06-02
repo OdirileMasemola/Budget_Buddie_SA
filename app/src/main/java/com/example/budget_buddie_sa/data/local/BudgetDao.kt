@@ -22,5 +22,5 @@ interface BudgetDao {
     fun getBudgetForUser(userId: String): Flow<Budget?>
 
     @Query("SELECT * FROM budgets WHERE userId = :userId LIMIT 1")
-    suspend fun getBudgetSync(userId: Int): Budget?
+    suspend fun getBudgetSync(userId: String): Budget?
 }

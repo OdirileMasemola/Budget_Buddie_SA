@@ -25,6 +25,12 @@ class AddExpenseActivity : BaseNavigationActivity() {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
+            val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            try {
+                contentResolver.takePersistableUriPermission(uri, flag)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             selectedImageUri = uri.toString()
             Toast.makeText(this, "Receipt Image Selected", Toast.LENGTH_SHORT).show()
         }

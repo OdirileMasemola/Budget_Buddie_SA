@@ -14,27 +14,31 @@ import java.util.*
 
 /**
  * DashboardViewModel manages the data for the Dashboard screen.
- * Updated to use String userId.
+ * Refactored to ensure stable initialization and resolve "Cannot create instance" error.
  */
 class DashboardViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val expenseRepo = (application as BudgetApp).expenseRepository
-    private val budgetRepo = (application as BudgetApp).budgetRepository
-    private val categoryRepo = (application as BudgetApp).categoryRepository
+    private val budgetApp = application as BudgetApp
+    private val expenseRepo = budgetApp.expenseRepository
+    private val budgetRepo = budgetApp.budgetRepository
+    private val categoryRepo = budgetApp.categoryRepository
+    
     private val sessionManager = SessionManager(application)
+    // Requirement 4: Safe fallback if userId is missing
     private val userId: String = sessionManager.getUserId() ?: ""
 
     // Observe total spending from the database. 
     val totalSpendingValue: LiveData<Double?> = if (userId.isNotEmpty()) {
         expenseRepo.getTotalSpendingForUser(userId).asLiveData()
     } else {
+        // Requirement 6: Provide empty/zero data instead of crashing
         MutableLiveData(0.0)
     }
 
     // Observe recent expenses (limit to 5 for the dashboard).
     val recentExpenses: LiveData<List<Expense>> = if (userId.isNotEmpty()) {
-        expenseRepo.getExpensesForUser(userId).map { 
-            it.take(5) 
+        expenseRepo.getExpensesForUser(userId).map { list ->
+            list.take(5)
         }.asLiveData()
     } else {
         MutableLiveData(emptyList())
@@ -77,7 +81,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
 
     // Clamped percentage for progress bar (0-100)
     val spendingProgress: LiveData<Int> = spendingPercentText.map { percent ->
-        percent.coerceIn(0, 100)
+        percent?.coerceIn(0, 100) ?: 0
     }
 
     // This Month total logic
