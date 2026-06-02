@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="32dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Create New Category"
+            android:textColor="#2D1B6B"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Section 3 — Category name input -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/OutlinedInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="Category Name"
+            app:startIconDrawable="@drawable/ic_category"
+            app:startIconTint="#C4B8DC">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCategoryName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:textColor="#2D1B6B" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Section 4 — Color picker -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:letterSpacing="0.05"
+            android:text="Pick a Colour"
+            android:textColor="#2D1B6B"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/color1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/circle_red"
+                android:tag="#FF4444" />
+
+            <View
+                android:id="@+id/color2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/circle_blue"
+                android:tag="#33B5E5" />
+
+            <View
+                android:id="@+id/color3"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/circle_green"
+                android:tag="#99CC00" />
+
+            <View
+                android:id="@+id/color4"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/circle_orange"
+                android:tag="#FFBB33" />
+
+            <View
+                android:id="@+id/color5"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/circle_purple"
+                android:tag="#AA66CC" />
+        </LinearLayout>
+
+        <!-- Section 5 — Image picker -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="OR Add an Icon"
+            android:textColor="#9B8EC0"
+            android:textSize="12sp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnPickImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="#FAFAFA"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:strokeColor="#E8DFF8"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
+
+                <View
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/circle_light_purple" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Choose from Gallery"
+                        android:textColor="#2D1B6B"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upload a custom icon image"
+                        android:textColor="#9B8EC0"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="#C4B8DC" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="23dp"
+                android:src="@drawable/ic_category"
+                app:tint="#7C3AED" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Section 6 — Image preview -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#E8DFF8"
+                app:strokeWidth="1dp">
+
+                <ImageView
+                    android:id="@+id/ivSelectedPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Section 7 — Save button -->
+        <Button
+            android:id="@+id/btnSaveCategory"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:background="@drawable/btn_orange_gradient"
+            android:text="Save Category"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
