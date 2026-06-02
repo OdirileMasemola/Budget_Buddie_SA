@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
-import com.example.budget_buddie_sa.data.model.Category
+import com.bumptech.glide.Glide
 import com.example.budget_buddie_sa.viewmodel.CategoryViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
@@ -31,7 +31,12 @@ class AddCategoryActivity : BaseNavigationActivity() {
             }
             tempSelectedImageUri = uri.toString()
             ivPreview.visibility = View.VISIBLE
-            ivPreview.setImageURI(uri)
+            
+            Glide.with(this)
+                .load(uri)
+                .centerCrop()
+                .override(300, 300)
+                .into(ivPreview)
         }
     }
 
@@ -74,13 +79,8 @@ class AddCategoryActivity : BaseNavigationActivity() {
         btnSaveCategory.setOnClickListener {
             val name = etCategoryName.text.toString().trim()
             if (name.isNotEmpty()) {
-                val category = Category(
-                    userId = "", // Set in ViewModel
-                    name = name,
-                    color = selectedColor,
-                    imageUri = tempSelectedImageUri
-                )
-                categoryViewModel.insertCategory(category)
+                val imageUri = tempSelectedImageUri?.let { Uri.parse(it) }
+                categoryViewModel.insertCategory(name, selectedColor, imageUri)
                 Toast.makeText(this, "Category added!", Toast.LENGTH_SHORT).show()
                 finish()
             } else {

@@ -11,8 +11,11 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey
     val id: String, // Firebase UID
-    val username: String = "",
+    val email: String = "",
+    val displayName: String = "",
     val firstName: String = "",
     val lastName: String = "",
-    val email: String = ""
+    val username: String = "",
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis()
 )

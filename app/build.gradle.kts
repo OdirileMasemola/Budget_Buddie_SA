@@ -69,6 +69,10 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.play.services.auth)
 
+    // Glide for image loading
+    implementation(libs.glide)
+    ksp(libs.glide.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

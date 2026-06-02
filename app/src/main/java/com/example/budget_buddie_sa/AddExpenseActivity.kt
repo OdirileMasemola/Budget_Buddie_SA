@@ -1,13 +1,13 @@
 package com.example.budget_buddie_sa
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.example.budget_buddie_sa.data.model.Category
-import com.example.budget_buddie_sa.data.model.Expense
 import com.example.budget_buddie_sa.viewmodel.ExpenseViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
@@ -21,7 +21,6 @@ class AddExpenseActivity : BaseNavigationActivity() {
     private val viewModel: ExpenseViewModel by viewModels()
     private var selectedImageUri: String? = null
     private var categoryList: List<Category> = emptyList()
-    private lateinit var sessionManager: SessionManager
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
@@ -39,9 +38,6 @@ class AddExpenseActivity : BaseNavigationActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_expense)
-
-        sessionManager = SessionManager(this)
-        val userId = sessionManager.getUserId() ?: ""
 
         supportActionBar?.title = "Add Expense"
 
@@ -107,17 +103,14 @@ class AddExpenseActivity : BaseNavigationActivity() {
             
             val selectedCategory = categoryList[selectedCategoryIndex]
 
-            val expense = Expense(
-                userId = userId,
+            // Save using ViewModel
+            viewModel.addExpense(
                 amount = amount,
                 date = date,
                 description = description,
                 categoryId = selectedCategory.id,
-                receiptImage = selectedImageUri
-            )
-
-            // Save using ViewModel
-            viewModel.addExpense(expense) {
+                receiptUri = selectedImageUri?.let { Uri.parse(it) }
+            ) {
                 Toast.makeText(this, "Expense Saved Successfully!", Toast.LENGTH_SHORT).show()
                 finish()
             }

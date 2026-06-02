@@ -1,6 +1,7 @@
 package com.example.budget_buddie_sa.viewmodel
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.*
 import com.example.budget_buddie_sa.BudgetApp
 import com.example.budget_buddie_sa.SessionManager
@@ -8,10 +9,10 @@ import com.example.budget_buddie_sa.data.model.Category
 import com.example.budget_buddie_sa.data.model.Expense
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 /**
- * ViewModel for managing Expenses
- * Updated to use String userId
+ * ViewModel for managing Expenses with Cloud Sync support.
  */
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
     
@@ -38,14 +39,39 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         MutableLiveData(0.0)
     }
 
-    fun addExpense(expense: Expense, onComplete: () -> Unit) {
+    /**
+     * Adds a new expense. Generates unique String ID.
+     */
+    fun addExpense(
+        amount: Double,
+        date: Long,
+        description: String,
+        categoryId: String,
+        receiptUri: Uri? = null,
+        onComplete: () -> Unit
+    ) {
         if (userId.isEmpty()) return
+        
+        val newExpense = Expense(
+            id = UUID.randomUUID().toString(),
+            userId = userId,
+            amount = amount,
+            date = date,
+            description = description,
+            categoryId = categoryId
+        )
+
         viewModelScope.launch(Dispatchers.IO) {
-            val expenseToSave = expense.copy(userId = userId)
-            expenseRepository.insertExpense(expenseToSave)
+            expenseRepository.insertExpense(newExpense, receiptUri)
             launch(Dispatchers.Main) {
                 onComplete()
             }
+        }
+    }
+
+    fun deleteExpense(expense: Expense) {
+        viewModelScope.launch(Dispatchers.IO) {
+            expenseRepository.deleteExpense(expense)
         }
     }
 }

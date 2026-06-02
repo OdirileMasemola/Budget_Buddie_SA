@@ -9,10 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 /**
- * ViewModel for managing the User's Budget.
- * Updated to use String userId.
+ * ViewModel for managing the User's Budget with Cloud Sync support.
  */
 class BudgetViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -33,7 +33,6 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
         MutableLiveData(0.0)
     }
 
-    // Combined Flow for progress percentage, converted to LiveData
     val spendingProgress: LiveData<Int> = if (userId.isNotEmpty()) {
         combine(
             budgetRepository.getBudgetForUser(userId),
@@ -55,16 +54,25 @@ class BudgetViewModel(application: Application) : AndroidViewModel(application) 
         return percentage.toInt().coerceIn(0, 100)
     }
 
+    /**
+     * Saves or updates the budget. Generates unique String ID for new budgets.
+     */
     fun saveBudget(min: Double, max: Double) {
         if (userId.isEmpty()) return
         viewModelScope.launch(Dispatchers.IO) {
             val existingBudget = budgetRepository.getBudgetForUser(userId).firstOrNull()
-            val newBudget = if (existingBudget != null) {
-                existingBudget.copy(minAmount = min, maxAmount = max)
+            if (existingBudget != null) {
+                val updatedBudget = existingBudget.copy(minAmount = min, maxAmount = max)
+                budgetRepository.updateBudget(updatedBudget)
             } else {
-                Budget(userId = userId, minAmount = min, maxAmount = max)
+                val newBudget = Budget(
+                    id = UUID.randomUUID().toString(),
+                    userId = userId,
+                    minAmount = min,
+                    maxAmount = max
+                )
+                budgetRepository.insertBudget(newBudget)
             }
-            budgetRepository.insertBudget(newBudget)
         }
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 
 /**
  * Activity to show a full-screen preview of an image (Category or Receipt).
@@ -22,8 +23,11 @@ class ImagePreviewActivity : AppCompatActivity() {
         
         if (!imageUriString.isNullOrEmpty()) {
             try {
-                ivFullImage.setImageURI(Uri.parse(imageUriString))
-            } catch (e: Exception) {0
+                Glide.with(this)
+                    .load(Uri.parse(imageUriString))
+                    .fitCenter()
+                    .into(ivFullImage)
+            } catch (e: Exception) {
                 e.printStackTrace()
                 finish() // Close if image cannot be loaded
             }

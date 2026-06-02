@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.budget_buddie_sa.ImagePreviewActivity
 import com.example.budget_buddie_sa.R
 import com.example.budget_buddie_sa.data.model.Category
@@ -41,7 +42,14 @@ class CategoryAdapter(
             // User selected a custom image
             holder.ivIcon.visibility = View.VISIBLE
             try {
-                holder.ivIcon.setImageURI(Uri.parse(category.imageUri))
+                Glide.with(holder.itemView.context)
+                    .load(Uri.parse(category.imageUri))
+                    .centerCrop()
+                    .override(300, 300)
+                    .placeholder(R.drawable.ic_category)
+                    .error(R.drawable.ic_category)
+                    .into(holder.ivIcon)
+
                 holder.ivIcon.imageTintList = null
                 holder.viewColor.background.clearColorFilter()
                 

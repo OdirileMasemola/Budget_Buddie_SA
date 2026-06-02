@@ -22,5 +22,8 @@ interface CategoryDao {
     fun getCategoriesForUser(userId: String): Flow<List<Category>>
     
     @Query("SELECT * FROM categories WHERE id = :id LIMIT 1")
-    suspend fun getCategoryById(id: Int): Category?
+    suspend fun getCategoryById(id: String): Category?
+
+    @Query("SELECT * FROM categories")
+    suspend fun getAllCategoriesSync(): List<Category>
 }

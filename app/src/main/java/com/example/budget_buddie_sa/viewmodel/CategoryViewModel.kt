@@ -1,16 +1,17 @@
 package com.example.budget_buddie_sa.viewmodel
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.*
 import com.example.budget_buddie_sa.BudgetApp
 import com.example.budget_buddie_sa.SessionManager
 import com.example.budget_buddie_sa.data.model.Category
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 /**
- * ViewModel for managing Categories.
- * Updated to use String userId.
+ * ViewModel for managing Categories with Cloud Sync support.
  */
 class CategoryViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -24,16 +25,27 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         MutableLiveData(emptyList())
     }
 
-    fun insertCategory(category: Category) {
+    /**
+     * Inserts a new category. Generates a unique String ID for cloud sync.
+     */
+    fun insertCategory(name: String, color: String, imageUri: Uri? = null) {
         if (userId.isEmpty()) return
+        
+        val newCategory = Category(
+            id = UUID.randomUUID().toString(), // Generate unique ID
+            userId = userId,
+            name = name,
+            color = color
+        )
+
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertCategory(category.copy(userId = userId))
+            repository.insertCategory(newCategory, imageUri)
         }
     }
 
-    fun updateCategory(category: Category) {
+    fun updateCategory(category: Category, newImageUri: Uri? = null) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateCategory(category)
+            repository.updateCategory(category, newImageUri)
         }
     }
 

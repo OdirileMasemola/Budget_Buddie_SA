@@ -8,10 +8,12 @@ import androidx.room.PrimaryKey
  */
 @Entity(tableName = "categories")
 data class Category(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val userId: String, // Updated to Firebase UID String
+    @PrimaryKey
+    val id: String, // Use String ID for Firestore sync
+    val userId: String,
     val name: String,
     val color: String = "#7C3AED",
-    val imageUri: String? = null
+    val imageUri: String? = null,
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis()
 )

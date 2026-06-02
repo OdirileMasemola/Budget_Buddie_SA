@@ -21,12 +21,14 @@ import androidx.room.PrimaryKey
     indices = [Index(value = ["categoryId"]), Index(value = ["userId"])]
 )
 data class Expense(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val userId: String, // Updated to Firebase UID String
+    @PrimaryKey
+    val id: String, // Use String ID for Firestore sync
+    val userId: String,
     val amount: Double,
     val date: Long,
     val description: String,
-    val categoryId: Int,
-    val receiptImage: String? = null
+    val categoryId: String, // Changed to String
+    val receiptImage: String? = null,
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis()
 )

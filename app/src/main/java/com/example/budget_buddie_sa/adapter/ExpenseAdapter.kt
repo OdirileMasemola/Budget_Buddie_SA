@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.budget_buddie_sa.ImagePreviewActivity
 import com.example.budget_buddie_sa.R
 import com.example.budget_buddie_sa.data.model.Expense
@@ -40,7 +41,14 @@ class ExpenseAdapter(private var expenses: List<Expense>) : RecyclerView.Adapter
         // Requirement 3: Display receipt image if available
         if (!expense.receiptImage.isNullOrEmpty()) {
             try {
-                holder.ivIcon.setImageURI(Uri.parse(expense.receiptImage))
+                Glide.with(holder.itemView.context)
+                    .load(Uri.parse(expense.receiptImage))
+                    .centerCrop()
+                    .override(300, 300)
+                    .placeholder(R.drawable.ic_list)
+                    .error(R.drawable.ic_list)
+                    .into(holder.ivIcon)
+
                 holder.ivIcon.imageTintList = null // Remove purple tint for real images
                 
                 // Requirement 4: Click to expand
