@@ -21,15 +21,8 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import kotlinx.coroutines.launch
 
-import java.security.MessageDigest
-import java.util.UUID
-
 /**
  * Login screen supporting Email/Password and Google Sign-In via Credential Manager.
- * NOTE: For Google Sign-In to work on a physical device, you MUST:
- * 1. Go to Firebase Console -> Project Settings.
- * 2. Add your SHA-1 and SHA-256 fingerprints (Get them by running './gradlew signingReport').
- * 3. Enable Google Sign-In in Firebase Auth -> Sign-in method.
  */
 class LoginActivity : AppCompatActivity() {
 
@@ -58,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
 
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
-        val etEmail = findViewById<EditText>(R.id.etUsername) // Using etUsername for Email
+        val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val btnGoogleSignIn = findViewById<Button>(R.id.btnGoogleSignIn)
@@ -68,11 +61,17 @@ class LoginActivity : AppCompatActivity() {
         authViewModel.authState.observe(this) { result ->
             when (result) {
                 is AuthViewModel.AuthResult.Success -> {
-                    sessionManager.saveSession(result.user.id)
+                    Log.d("LoginActivity", "Auth Success: Saving session for UID ${result.user.id}")
+                    sessionManager.saveSession(
+                        userId = result.user.id,
+                        email = result.user.email,
+                        displayName = result.user.username
+                    )
                     Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
                     navigateToDashboard()
                 }
                 is AuthViewModel.AuthResult.Error -> {
+                    Log.e("LoginActivity", "Auth Error: ${result.message}")
                     Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                 }
                 else -> {} 
@@ -83,20 +82,21 @@ class LoginActivity : AppCompatActivity() {
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please enter all fields", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            
-            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(this, "Please enter a valid email", Toast.LENGTH_SHORT).show()
+            if (!isValidEmail(email)) {
+                Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            if (password.isEmpty() || password.length < 6) {
+                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            
             authViewModel.login(email, password)
         }
 
         btnGoogleSignIn.setOnClickListener {
+            // Google Sign-In is separate and does not validate email/password fields
             signInWithGoogle()
         }
 
@@ -106,12 +106,19 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+
     private fun signInWithGoogle() {
-        // Requirement 1: Build Google ID Option with better security
+        Log.d("LoginActivity", "Google button clicked. Web Client ID: ${getString(R.string.default_web_client_id)}")
+        Toast.makeText(this, "Opening Google picker...", Toast.LENGTH_SHORT).show()
+
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setServerClientId(getString(R.string.default_web_client_id))
-            .setAutoSelectEnabled(true)
+            .setAutoSelectEnabled(false) // Set to false to force picker for debugging
             .build()
 
         val request: GetCredentialRequest = GetCredentialRequest.Builder()
@@ -120,31 +127,54 @@ class LoginActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
+                Log.d("LoginActivity", "Calling credentialManager.getCredential")
                 val result = credentialManager.getCredential(
                     request = request,
                     context = this@LoginActivity
                 )
-                handleSignIn(result)
+                Log.d("LoginActivity", "getCredential returned successfully")
+                handleGoogleLogin(result)
             } catch (e: GetCredentialException) {
-                // Requirement 1: Proper error messages
-                Log.e("LoginActivity", "Google Sign-In Error: ${e.message}")
-                val message = when (e.type) {
-                    "android.credentials.GetCredentialException.TYPE_USER_CANCELED" -> "Login cancelled"
-                    "android.credentials.GetCredentialException.TYPE_NO_CREDENTIAL" -> "No Google accounts found"
-                    else -> "Google Sign-In failed: ${e.message}"
-                }
-                Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
+                Log.e("LoginActivity", "Google Sign-In Failed: Type=${e.type}, Message=${e.message}", e)
+                Toast.makeText(this@LoginActivity, "Google Sign-In failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Log.e("LoginActivity", "Unexpected error during Google Sign-In", e)
+                Toast.makeText(this@LoginActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun handleSignIn(result: GetCredentialResponse) {
+    private fun handleGoogleLogin(result: GetCredentialResponse) {
         val credential = result.credential
-        if (credential is GoogleIdTokenCredential) {
-            val idToken = credential.idToken
-            authViewModel.loginWithGoogle(idToken)
+        Log.d("LoginActivity", "Google credential received of type: ${credential.type}")
+
+        if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+            try {
+                // Parse the credential using the static method
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                
+                val idToken = googleIdTokenCredential.idToken
+                val displayName = googleIdTokenCredential.displayName
+                val firstName = googleIdTokenCredential.givenName
+                val lastName = googleIdTokenCredential.familyName
+                val profilePic = googleIdTokenCredential.profilePictureUri
+
+                Log.d("LoginActivity", "Google ID token extracted: ${idToken.take(10)}...")
+                
+                // Requirement 7: Pass extracted info to ViewModel
+                authViewModel.loginWithGoogle(
+                    idToken = idToken,
+                    firstName = firstName,
+                    lastName = lastName,
+                    displayName = displayName
+                )
+            } catch (e: Exception) {
+                Log.e("LoginActivity", "Error parsing Google ID token: ${e.message}", e)
+                Toast.makeText(this, "Login Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         } else {
-            Log.e("LoginActivity", "Unexpected credential type")
+            // Requirement 8: Removed "Unexpected credential type" error logic
+            Log.d("LoginActivity", "Received non-Google ID token credential: ${credential.type}")
         }
     }
 

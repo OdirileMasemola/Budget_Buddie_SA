@@ -1,6 +1,7 @@
 package com.example.budget_buddie_sa.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -53,10 +54,11 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     _authState.value = AuthResult.Error("Login failed: User not found")
                 }
             } catch (e: Exception) {
-                // Requirement 2: Show clear messages
+                Log.e("AuthViewModel", "Login Error: ${e.message}", e)
                 val errorMessage = when (e) {
                     is com.google.firebase.auth.FirebaseAuthInvalidUserException -> "No account found with this email."
-                    is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException -> "Incorrect password."
+                    is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException -> "Incorrect email or password."
+                    is com.google.firebase.FirebaseException -> "Firebase Error: ${e.localizedMessage}"
                     else -> "Login Error: ${e.localizedMessage}"
                 }
                 _authState.value = AuthResult.Error(errorMessage)
@@ -70,6 +72,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun register(firstName: String, lastName: String, email: String, password: String) {
         viewModelScope.launch {
             try {
+                Log.d("AuthViewModel", "Attempting Firebase registration for $email")
                 val result = auth.createUserWithEmailAndPassword(email, password).await()
                 val firebaseUser = result.user
                 if (firebaseUser != null) {
@@ -78,17 +81,19 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                         firstName = firstName,
                         lastName = lastName,
                         email = email,
-                        username = email.split("@")[0]
+                        username = "$firstName $lastName"
                     )
                     withContext(Dispatchers.IO) {
                         userDao.insert(newUser)
                     }
-                    // Requirement 2: After register, also login the user in SessionManager
+                    Log.d("AuthViewModel", "Registration successful for UID ${firebaseUser.uid}")
                     _authState.value = AuthResult.Success(newUser)
                 }
             } catch (e: Exception) {
+                Log.e("AuthViewModel", "Registration Error: ${e.message}", e)
                 val errorMessage = when (e) {
                     is com.google.firebase.auth.FirebaseAuthUserCollisionException -> "This email is already registered."
+                    is com.google.firebase.auth.FirebaseAuthWeakPasswordException -> "Password is too weak."
                     else -> "Registration Failed: ${e.localizedMessage}"
                 }
                 _authState.value = AuthResult.Error(errorMessage)
@@ -97,35 +102,51 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Handles Google Sign-In Firebase Authentication using ID Token from Credential Manager.
+     * Handles Google Sign-In Firebase Authentication using ID Token and profile info.
      */
-    fun loginWithGoogle(idToken: String) {
+    fun loginWithGoogle(
+        idToken: String,
+        firstName: String? = null,
+        lastName: String? = null,
+        displayName: String? = null
+    ) {
         viewModelScope.launch {
             try {
+                Log.d("AuthViewModel", "Firebase credential created from ID token")
                 val credential = GoogleAuthProvider.getCredential(idToken, null)
+                
+                Log.d("AuthViewModel", "Calling Firebase signInWithCredential")
                 val result = auth.signInWithCredential(credential).await()
                 val firebaseUser = result.user
+                
                 if (firebaseUser != null) {
-                    // Requirement 1: If Google user is new, create Room profile. If exists, load it.
+                    Log.d("AuthViewModel", "Firebase sign-in success: ${firebaseUser.uid}")
+                    
+                    // Requirement 7: If Google user is new, create Room profile. If exists, load it.
                     var localUser = withContext(Dispatchers.IO) {
                         userDao.getUserById(firebaseUser.uid)
                     }
+                    
                     if (localUser == null) {
+                        Log.d("AuthViewModel", "Creating new local user profile for Google user")
                         localUser = User(
                             id = firebaseUser.uid,
-                            firstName = firebaseUser.displayName?.split(" ")?.getOrNull(0) ?: "",
-                            lastName = firebaseUser.displayName?.split(" ")?.getOrNull(1) ?: "",
+                            firstName = firstName ?: firebaseUser.displayName?.split(" ")?.getOrNull(0) ?: "",
+                            lastName = lastName ?: firebaseUser.displayName?.split(" ")?.getOrNull(1) ?: "",
                             email = firebaseUser.email ?: "",
-                            username = firebaseUser.displayName ?: firebaseUser.email?.split("@")?.get(0) ?: "GoogleUser"
+                            username = displayName ?: firebaseUser.displayName ?: firebaseUser.email?.split("@")?.get(0) ?: "GoogleUser"
                         )
                         withContext(Dispatchers.IO) {
                             userDao.insert(localUser!!)
                         }
                     } else {
-                        // User exists, maybe update email/name if changed
+                        Log.d("AuthViewModel", "Updating existing local user profile")
+                        // User exists, update email/name if changed
                         val updatedUser = localUser.copy(
                             email = firebaseUser.email ?: localUser.email,
-                            username = firebaseUser.displayName ?: localUser.username
+                            username = displayName ?: firebaseUser.displayName ?: localUser.username,
+                            firstName = firstName ?: localUser.firstName,
+                            lastName = lastName ?: localUser.lastName
                         )
                         withContext(Dispatchers.IO) {
                             userDao.update(updatedUser)
@@ -133,9 +154,19 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                         localUser = updatedUser
                     }
                     _authState.value = AuthResult.Success(localUser!!)
+                } else {
+                    Log.e("AuthViewModel", "Firebase sign-in failure: User is null")
+                    _authState.value = AuthResult.Error("Firebase sign-in failed: User is null")
                 }
             } catch (e: Exception) {
-                _authState.value = AuthResult.Error("Google Login Failed: ${e.localizedMessage}")
+                Log.e("AuthViewModel", "Firebase sign-in failure: ${e.message}", e)
+                val errorMessage = when (e) {
+                    is com.google.firebase.auth.FirebaseAuthInvalidUserException -> "Account disabled or not found."
+                    is com.google.firebase.auth.FirebaseAuthInvalidCredentialsException -> "Invalid Google credentials."
+                    is com.google.android.gms.common.api.ApiException -> "Google API Error (Code: ${e.statusCode}): ${e.message}"
+                    else -> "Google Login Failed: ${e.localizedMessage}"
+                }
+                _authState.value = AuthResult.Error(errorMessage)
             }
         }
     }

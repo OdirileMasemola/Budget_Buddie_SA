@@ -12,20 +12,29 @@ class SessionManager(context: Context) {
 
     companion object {
         private const val KEY_USER_ID = "user_id"
+        private const val KEY_USER_EMAIL = "user_email"
+        private const val KEY_DISPLAY_NAME = "display_name"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
     }
 
     /**
      * Saves user session info.
-     * @param userId The Firebase UID of the logged-in user (always String).
+     * @param userId The Firebase UID of the logged-in user.
+     * @param email The user's email address.
+     * @param displayName The user's display name.
      */
-    fun saveSession(userId: String) {
+    fun saveSession(userId: String, email: String? = null, displayName: String? = null) {
         prefs.edit().apply {
             putString(KEY_USER_ID, userId)
+            putString(KEY_USER_EMAIL, email)
+            putString(KEY_DISPLAY_NAME, displayName)
             putBoolean(KEY_IS_LOGGED_IN, true)
             apply()
         }
     }
+
+    fun getUserEmail(): String? = prefs.getString(KEY_USER_EMAIL, null)
+    fun getDisplayName(): String? = prefs.getString(KEY_DISPLAY_NAME, null)
 
     /**
      * Retrieves the stored user ID safely.

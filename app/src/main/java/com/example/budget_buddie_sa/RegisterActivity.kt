@@ -52,8 +52,13 @@ class RegisterActivity : AppCompatActivity() {
         authViewModel.authState.observe(this) { result ->
             when (result) {
                 is AuthViewModel.AuthResult.Success -> {
-                    sessionManager.saveSession(result.user.id)
-                    Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
+                    Log.d("RegisterActivity", "Auth Success: Saving session for UID ${result.user.id}")
+                    sessionManager.saveSession(
+                        userId = result.user.id,
+                        email = result.user.email,
+                        displayName = result.user.username
+                    )
+                    Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show()
                     navigateToDashboard()
                 }
                 AuthViewModel.AuthResult.RegisterSuccess -> {
@@ -61,6 +66,7 @@ class RegisterActivity : AppCompatActivity() {
                     finish() 
                 }
                 is AuthViewModel.AuthResult.Error -> {
+                    Log.e("RegisterActivity", "Auth Error: ${result.message}")
                     Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -71,6 +77,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         btnGoogleSignUp.setOnClickListener {
+            // Google Sign-In is separate and does not validate email/password fields
             signUpWithGoogle()
         }
 
@@ -81,13 +88,13 @@ class RegisterActivity : AppCompatActivity() {
             val password = etRegPassword.text.toString().trim()
             val confirmPassword = etConfirmPassword.text.toString().trim()
 
-            if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            if (firstName.isEmpty() || lastName.isEmpty()) {
+                Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show()
+            if (!isValidEmail(email)) {
+                Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -105,10 +112,19 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+
     private fun signUpWithGoogle() {
+        Log.d("RegisterActivity", "Google button clicked. Web Client ID: ${getString(R.string.default_web_client_id)}")
+        Toast.makeText(this, "Opening Google picker...", Toast.LENGTH_SHORT).show()
+
         val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setServerClientId(getString(R.string.default_web_client_id))
+            .setAutoSelectEnabled(false)
             .build()
 
         val request: GetCredentialRequest = GetCredentialRequest.Builder()
@@ -117,25 +133,53 @@ class RegisterActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
+                Log.d("RegisterActivity", "Calling credentialManager.getCredential")
                 val result = credentialManager.getCredential(
                     request = request,
                     context = this@RegisterActivity
                 )
+                Log.d("RegisterActivity", "getCredential returned successfully")
                 handleGoogleSignUp(result)
             } catch (e: GetCredentialException) {
-                Log.e("RegisterActivity", "Google Sign-Up Error: ${e.message}")
-                Toast.makeText(this@RegisterActivity, "Google Sign-Up failed", Toast.LENGTH_SHORT).show()
+                Log.e("RegisterActivity", "Google Sign-Up Error: Type=${e.type}, Message=${e.message}", e)
+                Toast.makeText(this@RegisterActivity, "Google Sign-Up failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Log.e("RegisterActivity", "Unexpected error during Google Sign-Up", e)
+                Toast.makeText(this@RegisterActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun handleGoogleSignUp(result: GetCredentialResponse) {
         val credential = result.credential
-        if (credential is GoogleIdTokenCredential) {
-            val idToken = credential.idToken
-            authViewModel.loginWithGoogle(idToken)
+        Log.d("RegisterActivity", "Google credential received of type: ${credential.type}")
+
+        if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+            try {
+                // Parse the credential
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                
+                val idToken = googleIdTokenCredential.idToken
+                val displayName = googleIdTokenCredential.displayName
+                val firstName = googleIdTokenCredential.givenName
+                val lastName = googleIdTokenCredential.familyName
+                
+                Log.d("RegisterActivity", "Google ID token extracted: ${idToken.take(10)}...")
+                
+                // Requirement 7: Use extracted info to create profile
+                authViewModel.loginWithGoogle(
+                    idToken = idToken,
+                    firstName = firstName,
+                    lastName = lastName,
+                    displayName = displayName
+                )
+            } catch (e: Exception) {
+                Log.e("RegisterActivity", "Error parsing Google ID token: ${e.message}", e)
+                Toast.makeText(this, "Sign up Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         } else {
-            Log.e("RegisterActivity", "Unexpected credential type")
+            // Requirement 8: Removed "Unexpected credential type" error logic
+            Log.d("RegisterActivity", "Received non-Google ID token credential: ${credential.type}")
         }
     }
 
