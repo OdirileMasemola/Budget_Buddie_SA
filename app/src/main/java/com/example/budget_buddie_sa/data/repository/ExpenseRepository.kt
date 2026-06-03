@@ -52,6 +52,10 @@ class ExpenseRepository(
         return expenseDao.getSpendingForPeriod(userId, startDate, endDate)
     }
 
+    fun getExpensesForUserInPeriod(userId: String, startDate: Long, endDate: Long): Flow<List<Expense>> {
+        return expenseDao.getExpensesForUserInPeriod(userId, startDate, endDate)
+    }
+
     /**
      * Used during login sync to update local RoomDB with Firestore data.
      */

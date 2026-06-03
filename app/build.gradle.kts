@@ -72,6 +72,9 @@ dependencies {
     implementation(libs.glide)
     ksp(libs.glide.compiler)
 
+    // MPAndroidChart
+    implementation(libs.mpAndroidChart)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

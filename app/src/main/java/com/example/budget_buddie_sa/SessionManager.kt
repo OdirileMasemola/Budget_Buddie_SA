@@ -15,6 +15,7 @@ class SessionManager(context: Context) {
         private const val KEY_USER_EMAIL = "user_email"
         private const val KEY_DISPLAY_NAME = "display_name"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
+        private const val KEY_HAS_LOGGED_IN_BEFORE = "has_logged_in_before"
     }
 
     /**
@@ -31,6 +32,20 @@ class SessionManager(context: Context) {
             putBoolean(KEY_IS_LOGGED_IN, true)
             apply()
         }
+    }
+
+    /**
+     * Checks if this is the user's first time logging in or starting a session.
+     */
+    fun hasLoggedInBefore(): Boolean {
+        return prefs.getBoolean(KEY_HAS_LOGGED_IN_BEFORE, false)
+    }
+
+    /**
+     * Marks that the user has logged in at least once.
+     */
+    fun setHasLoggedInBefore(value: Boolean) {
+        prefs.edit().putBoolean(KEY_HAS_LOGGED_IN_BEFORE, value).apply()
     }
 
     fun getUserEmail(): String? = prefs.getString(KEY_USER_EMAIL, null)
