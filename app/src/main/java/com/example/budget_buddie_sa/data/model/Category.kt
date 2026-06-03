@@ -13,7 +13,7 @@ data class Category(
     val userId: String,
     val name: String,
     val color: String = "#7C3AED",
-    val imageUri: String? = null,
+    val imageUrl: String? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )

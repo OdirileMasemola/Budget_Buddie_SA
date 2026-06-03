@@ -3,6 +3,7 @@ package com.example.budget_buddie_sa
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,11 +25,12 @@ class AddExpenseActivity : BaseNavigationActivity() {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
+            Log.d("AddExpense", "Receipt image selected: $uri")
             val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
             try {
                 contentResolver.takePersistableUriPermission(uri, flag)
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("AddExpense", "Failed to take persistable permission: ${e.message}")
             }
             selectedImageUri = uri.toString()
             Toast.makeText(this, "Receipt Image Selected", Toast.LENGTH_SHORT).show()
@@ -102,6 +104,8 @@ class AddExpenseActivity : BaseNavigationActivity() {
             val date = calendar.timeInMillis
             
             val selectedCategory = categoryList[selectedCategoryIndex]
+
+            Log.d("AddExpense", "Initiating save for expense: $description with receipt image: $selectedImageUri")
 
             // Save using ViewModel
             viewModel.addExpense(

@@ -9,17 +9,17 @@ class BudgetApp : Application() {
     
     // Core Cloud Repositories
     val firebaseSyncRepository by lazy { FirebaseSyncRepository() }
-    val storageRepository by lazy { StorageRepository() }
+    val localImageRepository by lazy { LocalImageRepository(this) }
 
     // Domain Repositories
     val expenseRepository by lazy { 
-        ExpenseRepository(database.expenseDao(), firebaseSyncRepository, storageRepository) 
+        ExpenseRepository(database.expenseDao(), firebaseSyncRepository, localImageRepository) 
     }
     val budgetRepository by lazy { 
         BudgetRepository(database.budgetDao(), firebaseSyncRepository) 
     }
     val categoryRepository by lazy { 
-        CategoryRepository(database.categoryDao(), firebaseSyncRepository, storageRepository) 
+        CategoryRepository(database.categoryDao(), firebaseSyncRepository, localImageRepository)
     }
     val userRepository by lazy {
         UserRepository(database.userDao(), firebaseSyncRepository)

@@ -3,6 +3,7 @@ package com.example.budget_buddie_sa.adapter
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,28 +39,28 @@ class ExpenseAdapter(private var expenses: List<Expense>) : RecyclerView.Adapter
         val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
         holder.tvDate.text = sdf.format(Date(expense.date))
 
-        // Requirement 3: Display receipt image if available
-        if (!expense.receiptImage.isNullOrEmpty()) {
-            try {
-                Glide.with(holder.itemView.context)
-                    .load(Uri.parse(expense.receiptImage))
-                    .centerCrop()
-                    .override(300, 300)
-                    .placeholder(R.drawable.ic_list)
-                    .error(R.drawable.ic_list)
-                    .into(holder.ivIcon)
+        Log.d("ExpenseAdapter", "Binding expense: ${expense.description}, imageUrl: ${expense.imageUrl}")
 
-                holder.ivIcon.imageTintList = null // Remove purple tint for real images
-                
-                // Requirement 4: Click to expand
-                holder.ivIcon.setOnClickListener {
-                    val intent = Intent(holder.itemView.context, ImagePreviewActivity::class.java)
-                    intent.putExtra("image_uri", expense.receiptImage)
-                    holder.itemView.context.startActivity(intent)
-                }
-            } catch (e: Exception) {
-                holder.ivIcon.setImageResource(R.drawable.ic_list)
-                holder.ivIcon.setOnClickListener(null)
+        // Requirement 5, 6 & 7: Display receipt image if available
+        if (!expense.imageUrl.isNullOrEmpty()) {
+            Log.d("ExpenseAdapter", "Loading imageUrl for ${expense.description}: ${expense.imageUrl}")
+            
+            // Reset tint before loading image
+            holder.ivIcon.imageTintList = null
+            holder.ivIcon.colorFilter = null
+
+            Glide.with(holder.itemView.context)
+                .load(expense.imageUrl)
+                .centerCrop()
+                .override(300, 300)
+                .into(holder.ivIcon)
+            
+            // Requirement 4: Click to expand
+            holder.ivIcon.setOnClickListener {
+                Log.d("ExpenseAdapter", "Opening ImagePreviewActivity with imageUrl: ${expense.imageUrl}")
+                val intent = Intent(holder.itemView.context, ImagePreviewActivity::class.java)
+                intent.putExtra("imageUrl", expense.imageUrl)
+                holder.itemView.context.startActivity(intent)
             }
         } else {
             // Default icon

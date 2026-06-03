@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,34 +38,31 @@ class CategoryAdapter(
         val category = categories[position]
         holder.tvName.text = category.name
         
-        // Requirement 1 & 5: Category image/icon display logic
-        if (!category.imageUri.isNullOrEmpty()) {
-            // User selected a custom image
-            holder.ivIcon.visibility = View.VISIBLE
-            try {
-                Glide.with(holder.itemView.context)
-                    .load(Uri.parse(category.imageUri))
-                    .centerCrop()
-                    .override(300, 300)
-                    .placeholder(R.drawable.ic_category)
-                    .error(R.drawable.ic_category)
-                    .into(holder.ivIcon)
+        Log.d("CategoryAdapter", "Binding category: ${category.name}, imageUrl: ${category.imageUrl}")
 
-                holder.ivIcon.imageTintList = null
-                holder.viewColor.background.clearColorFilter()
-                
-                // Requirement 4: Click to expand
-                holder.ivIcon.setOnClickListener {
-                    val intent = Intent(holder.itemView.context, ImagePreviewActivity::class.java)
-                    intent.putExtra("image_uri", category.imageUri)
-                    holder.itemView.context.startActivity(intent)
-                }
-            } catch (e: Exception) {
-                holder.ivIcon.setImageResource(R.drawable.ic_category)
-                holder.ivIcon.setOnClickListener(null)
+        // Requirement 6 & 7: Category image display logic
+        if (!category.imageUrl.isNullOrEmpty()) {
+            Log.d("CategoryAdapter", "Loading imageUrl for ${category.name}: ${category.imageUrl}")
+            holder.ivIcon.visibility = View.VISIBLE
+            // Reset tint before loading image
+            holder.ivIcon.imageTintList = null
+            holder.ivIcon.colorFilter = null
+
+            Glide.with(holder.itemView.context)
+                .load(category.imageUrl)
+                .centerCrop()
+                .override(300, 300)
+                .into(holder.ivIcon)
+
+            // Requirement 4: Click to expand (using ImagePreviewActivity)
+            holder.ivIcon.setOnClickListener {
+                Log.d("CategoryAdapter", "Opening ImagePreviewActivity with imageUrl: ${category.imageUrl}")
+                val intent = Intent(holder.itemView.context, ImagePreviewActivity::class.java)
+                intent.putExtra("imageUrl", category.imageUrl)
+                holder.itemView.context.startActivity(intent)
             }
         } else {
-            // No image, use color block (Requirement 1 & 5)
+            // No image, use color block or default icon
             holder.ivIcon.visibility = View.VISIBLE
             holder.ivIcon.setImageResource(R.drawable.ic_category)
             holder.ivIcon.setColorFilter(Color.parseColor("#7C3AED"), PorterDuff.Mode.SRC_IN)

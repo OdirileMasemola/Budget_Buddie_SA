@@ -3,6 +3,7 @@ package com.example.budget_buddie_sa
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
@@ -30,7 +31,8 @@ class CategoryActivity : BaseNavigationActivity() {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            // Take persistable URI permission to ensure the image still displays after app restart
+            Log.d("CategoryActivity", "Image selected for edit: $uri")
+            // Take persistable URI permission
             val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
             try {
                 contentResolver.takePersistableUriPermission(uri, flag)
@@ -75,7 +77,8 @@ class CategoryActivity : BaseNavigationActivity() {
     }
 
     private fun showEditCategoryDialog(category: Category) {
-        tempSelectedImageUri = category.imageUri
+        // Use imageUrl instead of imageUri
+        tempSelectedImageUri = category.imageUrl
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_category, null)
         val etCategoryName = dialogView.findViewById<EditText>(R.id.etCategoryName)
         val btnPickImage = dialogView.findViewById<MaterialCardView>(R.id.btnPickImage)
@@ -83,9 +86,13 @@ class CategoryActivity : BaseNavigationActivity() {
         ivPreview = dialogView.findViewById(R.id.ivSelectedPreview)
 
         etCategoryName.setText(category.name)
-        if (tempSelectedImageUri != null) {
+        if (!tempSelectedImageUri.isNullOrEmpty()) {
             ivPreview?.visibility = View.VISIBLE
-            ivPreview?.setImageURI(Uri.parse(tempSelectedImageUri))
+            // If it's a web URL, setImageURI might not work, but we are just showing the selected preview here.
+            // For editing, we might need Glide if it's already a Firebase URL.
+            Uri.parse(tempSelectedImageUri)?.let { uri ->
+                 ivPreview?.setImageURI(uri)
+            }
         }
 
         var selectedColor = category.color
@@ -118,12 +125,18 @@ class CategoryActivity : BaseNavigationActivity() {
             .setPositiveButton("Update") { _, _ ->
                 val name = etCategoryName.text.toString().trim()
                 if (name.isNotEmpty()) {
+                    Log.d("CategoryActivity", "Updating category: $name with image: $tempSelectedImageUri")
                     val updatedCategory = category.copy(
                         name = name,
-                        color = selectedColor,
-                        imageUri = tempSelectedImageUri
+                        color = selectedColor
+                        // imageUrl is handled in ViewModel/Repository if it's a new Uri
                     )
-                    categoryViewModel.updateCategory(updatedCategory)
+                    
+                    val newImageUri = if (tempSelectedImageUri != category.imageUrl) {
+                        tempSelectedImageUri?.let { Uri.parse(it) }
+                    } else null
+                    
+                    categoryViewModel.updateCategory(updatedCategory, newImageUri)
                     Toast.makeText(this, "Category updated!", Toast.LENGTH_SHORT).show()
                 }
             }

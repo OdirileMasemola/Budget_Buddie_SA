@@ -1,6 +1,7 @@
 package com.example.budget_buddie_sa.data.repository
 
 import android.net.Uri
+import android.util.Log
 import com.example.budget_buddie_sa.data.local.ExpenseDao
 import com.example.budget_buddie_sa.data.model.Expense
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 class ExpenseRepository(
     private val expenseDao: ExpenseDao,
     private val syncRepository: FirebaseSyncRepository,
-    private val storageRepository: StorageRepository
+    private val localImageRepository: LocalImageRepository
 ) {
 
     fun getExpensesForUser(userId: String): Flow<List<Expense>> {
@@ -22,13 +23,18 @@ class ExpenseRepository(
         var finalExpense = expense
         
         if (receiptUri != null) {
-            val path = "users/${expense.userId}/receipts/${expense.id}.jpg"
-            val downloadUrl = storageRepository.uploadImage(receiptUri, path)
-            if (downloadUrl != null) {
-                finalExpense = finalExpense.copy(receiptImage = downloadUrl)
+            val fileName = "expense_${expense.id}.jpg"
+            Log.d("ExpenseRepository", "Saving receipt locally from: $receiptUri")
+            val localPath = localImageRepository.saveImageToInternalStorage(receiptUri, fileName)
+            if (localPath != null) {
+                Log.d("ExpenseRepository", "Receipt saved locally. Path: $localPath")
+                finalExpense = finalExpense.copy(imageUrl = localPath)
+            } else {
+                Log.e("ExpenseRepository", "Local receipt save failed.")
             }
         }
 
+        Log.d("ExpenseRepository", "Saving expense to Room & Firestore: ${finalExpense.description}, imageUrl: ${finalExpense.imageUrl}")
         expenseDao.insertExpense(finalExpense)
         syncRepository.syncExpense(finalExpense)
     }

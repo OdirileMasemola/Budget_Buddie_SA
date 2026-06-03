@@ -1,6 +1,7 @@
 package com.example.budget_buddie_sa.data.repository
 
 import android.net.Uri
+import android.util.Log
 import com.example.budget_buddie_sa.data.local.CategoryDao
 import com.example.budget_buddie_sa.data.model.Category
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 class CategoryRepository(
     private val categoryDao: CategoryDao,
     private val syncRepository: FirebaseSyncRepository,
-    private val storageRepository: StorageRepository
+    private val localImageRepository: LocalImageRepository
 ) {
 
     fun getCategoriesForUser(userId: String): Flow<List<Category>> {
@@ -21,19 +22,26 @@ class CategoryRepository(
     suspend fun insertCategory(category: Category, imageUri: Uri? = null) {
         var finalCategory = category
         
-        // 1. Upload image to Storage if provided
+        // 1. Save image to internal storage if provided
         if (imageUri != null) {
-            val path = "users/${category.userId}/category_images/${category.id}.jpg"
-            val downloadUrl = storageRepository.uploadImage(imageUri, path)
-            if (downloadUrl != null) {
-                finalCategory = finalCategory.copy(imageUri = downloadUrl)
+            val fileName = "category_${category.id}.jpg"
+            Log.d("CategoryRepository", "Saving image locally from: $imageUri")
+            val localPath = localImageRepository.saveImageToInternalStorage(imageUri, fileName)
+            if (localPath != null) {
+                Log.d("CategoryRepository", "Image saved locally. Path: $localPath")
+                finalCategory = finalCategory.copy(imageUrl = localPath)
+            } else {
+                Log.e("CategoryRepository", "Local image save failed.")
             }
         }
 
+        Log.d("CategoryRepository", "Saving category to Room & Firestore: ${finalCategory.name}, imageUrl: ${finalCategory.imageUrl}")
         // 2. Save to Room (Offline-first)
         categoryDao.insert(finalCategory)
 
-        // 3. Sync to Firestore
+        // 3. Sync to Firestore (without image path if desired, or keep it as local path for this device)
+        // User requested to save it as imageUrl/imageUri only for local use.
+        // We still sync the category object, which will include the local path.
         syncRepository.syncCategory(finalCategory)
     }
 
@@ -41,13 +49,18 @@ class CategoryRepository(
         var updatedCategory = category.copy(updatedAt = System.currentTimeMillis())
         
         if (newImageUri != null) {
-            val path = "users/${category.userId}/category_images/${category.id}.jpg"
-            val downloadUrl = storageRepository.uploadImage(newImageUri, path)
-            if (downloadUrl != null) {
-                updatedCategory = updatedCategory.copy(imageUri = downloadUrl)
+            val fileName = "category_${category.id}.jpg"
+            Log.d("CategoryRepository", "Updating local image from: $newImageUri")
+            val localPath = localImageRepository.saveImageToInternalStorage(newImageUri, fileName)
+            if (localPath != null) {
+                Log.d("CategoryRepository", "Image updated locally. Path: $localPath")
+                updatedCategory = updatedCategory.copy(imageUrl = localPath)
+            } else {
+                Log.e("CategoryRepository", "Local image update failed.")
             }
         }
 
+        Log.d("CategoryRepository", "Updating category in Room & Firestore: ${updatedCategory.name}, imageUrl: ${updatedCategory.imageUrl}")
         categoryDao.update(updatedCategory)
         syncRepository.syncCategory(updatedCategory)
     }

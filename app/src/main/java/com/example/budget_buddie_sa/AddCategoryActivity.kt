@@ -3,6 +3,7 @@ package com.example.budget_buddie_sa
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -23,11 +24,12 @@ class AddCategoryActivity : BaseNavigationActivity() {
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
+            Log.d("AddCategory", "Image selected: $uri")
             val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
             try {
                 contentResolver.takePersistableUriPermission(uri, flag)
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("AddCategory", "Failed to take persistable permission: ${e.message}")
             }
             tempSelectedImageUri = uri.toString()
             ivPreview.visibility = View.VISIBLE
@@ -80,6 +82,7 @@ class AddCategoryActivity : BaseNavigationActivity() {
             val name = etCategoryName.text.toString().trim()
             if (name.isNotEmpty()) {
                 val imageUri = tempSelectedImageUri?.let { Uri.parse(it) }
+                Log.d("AddCategory", "Initiating save for category: $name with selected image: $tempSelectedImageUri")
                 categoryViewModel.insertCategory(name, selectedColor, imageUri)
                 Toast.makeText(this, "Category added!", Toast.LENGTH_SHORT).show()
                 finish()

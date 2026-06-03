@@ -1,9 +1,10 @@
 package com.example.budget_buddie_sa
 
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 
@@ -19,19 +20,23 @@ class ImagePreviewActivity : AppCompatActivity() {
         val ivFullImage = findViewById<ImageView>(R.id.ivFullImage)
         val btnClose = findViewById<View>(R.id.btnClose)
 
-        val imageUriString = intent.getStringExtra("image_uri")
+        val imageUrl = intent.getStringExtra("imageUrl")
+        Log.d("ImagePreviewActivity", "Received imageUrl: $imageUrl")
         
-        if (!imageUriString.isNullOrEmpty()) {
+        if (!imageUrl.isNullOrEmpty()) {
             try {
                 Glide.with(this)
-                    .load(Uri.parse(imageUriString))
+                    .load(imageUrl)
                     .fitCenter()
                     .into(ivFullImage)
             } catch (e: Exception) {
-                e.printStackTrace()
-                finish() // Close if image cannot be loaded
+                Log.e("ImagePreviewActivity", "Error loading image: ${e.message}")
+                Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show()
+                finish()
             }
         } else {
+            Log.e("ImagePreviewActivity", "imageUrl is null or empty")
+            Toast.makeText(this, "Image path is missing", Toast.LENGTH_SHORT).show()
             finish()
         }
 

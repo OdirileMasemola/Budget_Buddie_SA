@@ -28,7 +28,7 @@ data class Expense(
     val date: Long,
     val description: String,
     val categoryId: String, // Changed to String
-    val receiptImage: String? = null,
+    val imageUrl: String? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )
