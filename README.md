@@ -1,8 +1,16 @@
 # Budget Buddie SA
 
 <div align="center">
+<p align="center">
+  <img src="logo.webp" alt="Budget Buddie SA Logo" width="200">
+</p>
 
-<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW8yYzlqNHk3eTNwb3BvZG5rZm85ZzFidjE2emttbWl1dWZmeTdlciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/67ThRZlYBvibtdF9JH/giphy.gif" width="280" alt="Budget GIF"/>
+<h1 align="center">Budget Buddie SA</h1>
+
+<p align="center">
+  A personal budgeting and expense tracking application built with Kotlin, RoomDB, Firebase and Material Design.
+</p>
+
 
 <br/>
 
@@ -142,5 +150,7 @@ https://youtu.be/TnXcwW8aHzo
 | **Lerato Mokoena** | Developer & Documentation Lead |
 
 ---
-
+<div align="center">
+<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW8yYzlqNHk3eTNwb3BvZG5rZm85ZzFidjE2emttbWl1dWZmeTdlciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/67ThRZlYBvibtdF9JH/giphy.gif" width="280" alt="Budget GIF"/>
+</div>
 This project forms part of the **OPSC 6311 Portfolio of Evidence (POE)** and demonstrates the end-to-end design and development of a mobile budgeting application for Android.
