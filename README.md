@@ -1,16 +1,11 @@
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/BudgetBuddieLogo.png" alt="Budget Buddie SA" width="160"/>
+
 # Budget Buddie SA
 
-<div align="center">
-<p align="center">
-  <img src="logo.webp" alt="Budget Buddie SA Logo" width="200">
-</p>
-
-<h1 align="center">Budget Buddie SA</h1>
-
-<p align="center">
-  A personal budgeting and expense tracking application built with Kotlin, RoomDB, Firebase and Material Design.
-</p>
-
+**A personal budgeting app built for students and young adults in South Africa.**  
+Track daily spending, crush your financial goals, and actually understand where your money goes.
 
 <br/>
 
@@ -20,44 +15,31 @@
 ![Status](https://img.shields.io/badge/Status-In%20Development-FFB300?style=for-the-badge)
 ![POE](https://img.shields.io/badge/OPSC%206311-POE-1565C0?style=for-the-badge)
 
-<br/>
-
-*A personal finance app built for students and young adults in South Africa.*
-
 </div>
 
 ---
 
-## Overview
+## What Is This
 
-Budget Buddie SA is an Android budgeting application that helps users track daily spending, manage expense categories, and work toward financial goals. Built with simplicity at its core, the app is designed to make personal finance less overwhelming and more habit-forming — especially for students navigating real-world money management for the first time.
+Budget Buddie SA is an Android app that takes the stress out of personal finance. Built with students in mind, it gives you a clean, no-nonsense way to log expenses, organise your spending, and set goals you'll actually stick to.
 
----
-
-## Purpose
-
-The app gives students and young adults a no-fuss way to stay on top of their money:
-
-- Track daily expenses as they happen
-- Organise spending into clear, custom categories
-- Set and monitor personal budget goals
-- Build better financial habits over time
+No spreadsheets. No financial jargon. Just you, your money, and a plan.
 
 ---
 
 ## Features
 
-### Prototype — What's Built
+### What's Live Right Now
 
 | Feature | Status |
 |---|---|
-| User login & registration | Done |
+| User login and registration | Done |
 | Add and manage expenses | Done |
 | Create and manage categories | Done |
 | Expense history view | Done |
 | Budget goal setting | Done |
 
-### Final Version — What's Coming
+### What's Coming
 
 | Feature |
 |---|
@@ -68,17 +50,57 @@ The app gives students and young adults a no-fuss way to stay on top of their mo
 
 ---
 
-## Tech Stack
+## Screenshots
 
 <div align="center">
 
-![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
-![Android Studio](https://img.shields.io/badge/Android%20Studio-3DDC84?style=flat-square&logo=android-studio&logoColor=white)
-![XML](https://img.shields.io/badge/XML-FF6600?style=flat-square&logo=xml&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
-![Room](https://img.shields.io/badge/Room%20DB-4285F4?style=flat-square&logo=google&logoColor=white)
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/login.jpeg" width="200" alt="Login Screen"/>
+      <br/><sub><b>Login</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/signup.jpeg" width="200" alt="Sign Up Screen"/>
+      <br/><sub><b>Sign Up</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/dashboard.jpeg" width="200" alt="Dashboard"/>
+      <br/><sub><b>Dashboard</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/expenses.jpeg" width="200" alt="Expenses Screen"/>
+      <br/><sub><b>Expenses</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/categories.jpeg" width="200" alt="Categories Screen"/>
+      <br/><sub><b>Categories</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/chart.jpeg" width="200" alt="Charts Screen"/>
+      <br/><sub><b>Charts</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/budgetsettings.jpeg" width="200" alt="Budget Settings"/>
+      <br/><sub><b>Budget Settings</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/profile.jpeg" width="200" alt="Profile Screen"/>
+      <br/><sub><b>Profile</b></sub>
+    </td>
+    <td align="center"></td>
+  </tr>
+</table>
 
 </div>
+
+---
+
+## Tech Stack
 
 | Technology | Purpose |
 |---|---|
@@ -86,49 +108,30 @@ The app gives students and young adults a no-fuss way to stay on top of their mo
 | Android Studio | Development environment |
 | XML | UI layout and design |
 | RoomDB / SQLite | Local data storage |
-
----
-
-## App Screens
-
-```
-┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│   Login     │  │  Register   │  │  Dashboard  │  │ Add Expense │
-└─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
-
-┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│ Expense List│  │  Category   │  │   Budget    │
-└─────────────┘  └─────────────┘  └─────────────┘
-```
+| Firebase | Authentication and cloud sync |
 
 ---
 
 ## Getting Started
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/your-repo/budget-buddie-sa.git
+# Clone the repo
+git clone https://github.com/OdirileMasemola/Budget_Buddie_SA.git
 
-# 2. Open in Android Studio
+# Open the project in Android Studio
 
-# 3. Build the project
+# Build it
 ./gradlew build
 
-# 4. Run on emulator or physical Android device
+# Run on an emulator or plug in your Android device and go
 ```
 
 ---
 
-## Demo Video
+## Demo
 
-https://youtu.be/TnXcwW8aHzo
-
-
----
-
-## Screenshots
-
-> Coming soon.
+Watch the full walkthrough on YouTube:  
+**[Budget Buddie SA — Demo Video](https://youtu.be/TnXcwW8aHzo)**
 
 ---
 
@@ -144,13 +147,19 @@ https://youtu.be/TnXcwW8aHzo
 
 | Name | Role |
 |---|---|
-| **Odirile Masemola** | Developer & Lead |
-| **Ripfumelo Mabasa** | Developer /QA & Testing |
+| **Odirile Masemola** | Developer and Lead |
+| **Ripfumelo Mabasa** | Developer, QA and Testing |
 | **Sisipho Njili** | Front-End Developer |
-| **Lerato Mokoena** | Developer & Documentation Lead |
+| **Lerato Mokoena** | Developer and Documentation Lead |
 
 ---
+
 <div align="center">
-<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW8yYzlqNHk3eTNwb3BvZG5rZm85ZzFidjE2emttbWl1dWZmeTdlciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/67ThRZlYBvibtdF9JH/giphy.gif" width="280" alt="Budget GIF"/>
+
+<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW8yYzlqNHk3eTNwb3BvZG5rZm85ZzFidjE2emttbWl1dWZmeTdlciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/67ThRZlYBvibtdF9JH/giphy.gif" width="260" alt="Budget GIF"/>
+
+<br/><br/>
+
+*This project is part of the **OPSC 6311 Portfolio of Evidence (POE)** — end-to-end design and development of a mobile budgeting app for Android.*
+
 </div>
-This project forms part of the **OPSC 6311 Portfolio of Evidence (POE)** and demonstrates the end-to-end design and development of a mobile budgeting application for Android.
