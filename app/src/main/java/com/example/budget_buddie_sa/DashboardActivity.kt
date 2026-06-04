@@ -28,6 +28,8 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.NumberFormat
@@ -52,6 +54,13 @@ class DashboardActivity : BaseNavigationActivity() {
     private lateinit var layoutEmptyState: View
     private lateinit var rvCategoryBreakdown: RecyclerView
     private lateinit var cgDateRange: ChipGroup
+    private lateinit var cardCategories: MaterialCardView
+    private lateinit var cardAnalysis: MaterialCardView
+    
+    // Summary & Header Views
+    private lateinit var tvGreeting: TextView
+    private lateinit var btnAddExpense: MaterialButton
+    private lateinit var tvSeeAll: TextView
     
     // Budget Analysis Views
     private lateinit var tvBudgetStatus: TextView
@@ -76,17 +85,8 @@ class DashboardActivity : BaseNavigationActivity() {
         setupAdapters()
         setupPieChart()
         setupDateRangePicker()
+        setupClickListeners()
         observeData()
-
-        val btnAddExpense = findViewById<Button>(R.id.btnAddExpense)
-        btnAddExpense.setOnClickListener {
-            startActivity(Intent(this, AddExpenseActivity::class.java))
-        }
-        
-        val tvSeeAll = findViewById<TextView>(R.id.tvSeeAll)
-        tvSeeAll.setOnClickListener {
-            startActivity(Intent(this, ExpenseListActivity::class.java))
-        }
     }
 
     private fun initViews() {
@@ -95,6 +95,12 @@ class DashboardActivity : BaseNavigationActivity() {
         layoutEmptyState = findViewById(R.id.layoutEmptyState)
         rvCategoryBreakdown = findViewById(R.id.rvCategoryBreakdown)
         cgDateRange = findViewById(R.id.cgDateRange)
+        cardCategories = findViewById(R.id.cardCategories)
+        cardAnalysis = findViewById(R.id.cardAnalysis)
+        
+        tvGreeting = findViewById(R.id.tvGreeting)
+        btnAddExpense = findViewById(R.id.btnAddExpense)
+        tvSeeAll = findViewById(R.id.tvSeeAll)
         
         tvBudgetStatus = findViewById(R.id.tvBudgetStatus)
         pbAnalysisBudget = findViewById(R.id.pbAnalysisBudget)
@@ -106,7 +112,26 @@ class DashboardActivity : BaseNavigationActivity() {
         tvStatHighest = findViewById(R.id.tvStatHighest)
         tvStatRecent = findViewById(R.id.tvStatRecent)
         
-        setupGreeting(findViewById(R.id.tvGreeting))
+        setupGreeting(tvGreeting)
+    }
+
+    private fun setupClickListeners() {
+        btnAddExpense.setOnClickListener {
+            startActivity(Intent(this, AddExpenseActivity::class.java))
+        }
+        
+        tvSeeAll.setOnClickListener {
+            startActivity(Intent(this, ExpenseListActivity::class.java))
+        }
+
+        cardCategories.setOnClickListener {
+            startActivity(Intent(this, CategoryActivity::class.java))
+        }
+        
+        // Potential future feature: Detailed Analysis/Reports
+        cardAnalysis.setOnClickListener {
+            // Toast.makeText(this, "Detailed reports coming soon!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupAdapters() {
