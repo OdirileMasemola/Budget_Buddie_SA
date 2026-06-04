@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/BudgetBuddieLogo.png" alt="Budget Buddie SA" width="160"/>
+<img src="https://raw.githubusercontent.com/OdirileMasemola/Budget_Buddie_SA/main/assets/BudgetBuddieLogoCircle.png" alt="Budget Buddie SA" width="160"/>
 
 # Budget Buddie SA
 
