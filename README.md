@@ -43,9 +43,8 @@ No spreadsheets. No financial jargon. Just you, your money, and a plan.
 
 | Feature |
 |---|
-| Spending trend graphs |
-| Budget progress dashboard |
 | Gamification — badges and rewards |
+| Reports — see where your money went, how much you saved, and track your progress over time through clean visual reports |
 | Push notifications and reminders |
 
 ---
