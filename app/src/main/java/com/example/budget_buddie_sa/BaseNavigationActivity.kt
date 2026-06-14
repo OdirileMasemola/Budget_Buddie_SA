@@ -76,6 +76,10 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
                 true
             }
             // Add other actions (badges, reports, settings) if activities exist
+            R.id.action_reports -> {
+                startActivity(Intent(this, ReportsActivity::class.java))
+                true
+            }
             R.id.action_settings -> {
                 startActivity(Intent(this, BudgetActivity::class.java))
                 true

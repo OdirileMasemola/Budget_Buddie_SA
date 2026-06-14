@@ -1,6 +1,26 @@
 <resources>
     <string name="app_name">Budget_Buddie_SA</string>
     <string name="title_dashboard">Dashboard</string>
+    <string name="reports">Reports</string>
+    <string name="spending_reports">Spending Reports</string>
+    <string name="analyse_spending_subtitle">Analyse your spending over time</string>
+    <string name="date_range">Date Range</string>
+    <string name="tap_to_select_dates">Tap to select dates</string>
+    <string name="generate_report">Generate Report</string>
+    <string name="report_summary">Report Summary</string>
+    <string name="selected_period">Selected Period</string>
+    <string name="total_spent">Total Spent</string>
+    <string name="expense_count">Expense Count</string>
+    <string name="highest_category">HIGHEST CATEGORY</string>
+    <string name="lowest_category">LOWEST CATEGORY</string>
+    <string name="categories_used">CATEGORIES USED</string>
+    <string name="avg_daily">AVG DAILY</string>
+    <string name="category_breakdown">Category Breakdown</string>
+    <string name="export_as_pdf">Export as PDF</string>
+    <string name="save_pdf_copy">Save a copy of this report</string>
+    <string name="no_data_found">No Data Found</string>
+    <string name="no_data_desc">Select a date range and tap Generate Report to view your spending analysis.</string>
+
     <!-- Replace with your actual web client ID from Firebase if not using google-services plugin -->
     <string name="default_web_client_id">YOUR_WEB_CLIENT_ID.apps.googleusercontent.com</string>
 </resources>
