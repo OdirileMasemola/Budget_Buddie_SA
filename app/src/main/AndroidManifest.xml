@@ -36,6 +36,7 @@
         <activity android:name=".AddCategoryActivity" />
         <activity android:name=".ImagePreviewActivity" />
         <activity android:name=".ReportsActivity" />
+        <activity android:name=".BadgesActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

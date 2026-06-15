@@ -44,10 +44,34 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <View
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/circle_surface" />
+            <FrameLayout
+                android:id="@+id/containerHighestBadge"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless">
+
+                <View
+                    android:id="@+id/viewDashboardBadgeBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/circle_surface" />
+
+                <View
+                    android:id="@+id/viewDashboardBadgeGloss"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:background="@drawable/badge_gloss" />
+
+                <ImageView
+                    android:id="@+id/ivDashboardBadgeIcon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
         </LinearLayout>
 
         <!-- Section 2 — Summary Card -->

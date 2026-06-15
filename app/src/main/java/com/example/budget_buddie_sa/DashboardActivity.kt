@@ -19,20 +19,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budget_buddie_sa.adapter.CategoryBreakdownAdapter
 import com.example.budget_buddie_sa.adapter.ExpenseAdapter
+import com.example.budget_buddie_sa.data.model.Badge
 import com.example.budget_buddie_sa.data.model.Category
 import com.example.budget_buddie_sa.viewmodel.DashboardViewModel
 import com.example.budget_buddie_sa.viewmodel.DateRangeType
+import com.example.budget_buddie_sa.util.BadgeUIHelper
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -74,6 +78,13 @@ class DashboardActivity : BaseNavigationActivity() {
     private lateinit var tvStatHighest: TextView
     private lateinit var tvStatRecent: TextView
 
+    // Badge Views
+    private lateinit var containerHighestBadge: View
+    private lateinit var ivDashboardBadgeIcon: ImageView
+    private lateinit var viewDashboardBadgeBg: View
+    private lateinit var viewDashboardBadgeGloss: View
+    private var lastHighestBadgeId: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -112,6 +123,11 @@ class DashboardActivity : BaseNavigationActivity() {
         tvStatHighest = findViewById(R.id.tvStatHighest)
         tvStatRecent = findViewById(R.id.tvStatRecent)
         
+        containerHighestBadge = findViewById(R.id.containerHighestBadge)
+        ivDashboardBadgeIcon = findViewById(R.id.ivDashboardBadgeIcon)
+        viewDashboardBadgeBg = findViewById(R.id.viewDashboardBadgeBg)
+        viewDashboardBadgeGloss = findViewById(R.id.viewDashboardBadgeGloss)
+        
         setupGreeting(tvGreeting)
     }
 
@@ -131,6 +147,15 @@ class DashboardActivity : BaseNavigationActivity() {
         // Potential future feature: Detailed Analysis/Reports
         cardAnalysis.setOnClickListener {
             // Toast.makeText(this, "Detailed reports coming soon!", Toast.LENGTH_SHORT).show()
+        }
+
+        containerHighestBadge.setOnClickListener {
+            val badge = viewModel.highestUnlockedBadge.value
+            if (badge != null) {
+                showBadgeDetailModal(badge)
+            } else {
+                showEmptyBadgeModal()
+            }
         }
     }
 
@@ -349,6 +374,131 @@ class DashboardActivity : BaseNavigationActivity() {
             tvStatHighest.text = stats.highestCategory
             tvStatRecent.text = stats.mostRecentExpense
         }
+
+        viewModel.highestUnlockedBadge.observe(this) { badge ->
+            updateBadgeUI(badge)
+            
+            // Check for new unlock animation (ignore first load where lastHighestBadgeId is null)
+            if (badge != null && lastHighestBadgeId != null && badge.badgeId != lastHighestBadgeId) {
+                playBadgeUnlockAnimation()
+            }
+            
+            if (badge != null) {
+                lastHighestBadgeId = badge.badgeId
+            }
+        }
+    }
+
+    private fun updateBadgeUI(badge: Badge?) {
+        BadgeUIHelper.updateBadgeUI(badge, ivDashboardBadgeIcon, viewDashboardBadgeBg, viewDashboardBadgeGloss)
+        
+        if (badge != null && badge.isUnlocked) {
+            containerHighestBadge.elevation = 8.dp.toFloat()
+        } else {
+            containerHighestBadge.elevation = 0f
+        }
+    }
+
+    private fun getBadgeIcon(badgeId: String): Int {
+        return R.drawable.ic_trophy
+    }
+
+    private fun playBadgeUnlockAnimation() {
+        containerHighestBadge.animate()
+            .scaleX(1.3f)
+            .scaleY(1.3f)
+            .setDuration(300)
+            .withEndAction {
+                containerHighestBadge.animate()
+                    .scaleX(1.0f)
+                    .scaleY(1.0f)
+                    .setDuration(300)
+                    .start()
+            }.start()
+    }
+
+    private fun showBadgeDetailModal(badge: Badge) {
+        val dialog = BottomSheetDialog(this, R.style.BottomSheetDialogTheme)
+        val view = layoutInflater.inflate(R.layout.dialog_badge_detail, null)
+        
+        val tvName = view.findViewById<TextView>(R.id.tvModalBadgeName)
+        val tvTier = view.findViewById<TextView>(R.id.tvModalBadgeTier)
+        val tvDesc = view.findViewById<TextView>(R.id.tvModalBadgeDesc)
+        val tvProgress = view.findViewById<TextView>(R.id.tvModalProgressText)
+        val pbProgress = view.findViewById<ProgressBar>(R.id.pbModalBadgeProgress)
+        val tvStatus = view.findViewById<TextView>(R.id.tvModalStatus)
+        val tvDate = view.findViewById<TextView>(R.id.tvModalUnlockedDate)
+        val layoutDate = view.findViewById<View>(R.id.layoutUnlockedDate)
+        val ivIcon = view.findViewById<ImageView>(R.id.ivModalBadgeIcon)
+        val viewBg = view.findViewById<View>(R.id.viewModalBadgeBg)
+        val btnViewAll = view.findViewById<Button>(R.id.btnViewAllBadges)
+        val btnClose = view.findViewById<Button>(R.id.btnCloseModal)
+
+        tvName.text = badge.badgeName
+        tvTier.text = "${badge.rewardType.lowercase().replaceFirstChar { it.uppercase() }} Badge"
+        tvDesc.text = badge.description
+        tvProgress.text = "${badge.currentProgress} / ${badge.targetProgress}"
+        pbProgress.max = badge.targetProgress
+        pbProgress.progress = badge.currentProgress
+        
+        BadgeUIHelper.updateBadgeUI(badge, ivIcon, viewBg, view.findViewById(R.id.viewModalBadgeGloss))
+        
+        if (badge.isUnlocked) {
+            tvStatus.text = "Unlocked"
+            tvStatus.setTextColor(Color.parseColor("#10B981"))
+            layoutDate.visibility = View.VISIBLE
+            val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+            tvDate.text = sdf.format(Date(badge.unlockedDate ?: badge.lastUpdated))
+        } else {
+            tvStatus.text = "Locked"
+            tvStatus.setTextColor(Color.parseColor("#EF4444"))
+            layoutDate.visibility = View.GONE
+        }
+
+        btnViewAll.setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, BadgesActivity::class.java))
+        }
+
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+    private fun showEmptyBadgeModal() {
+        val dialog = BottomSheetDialog(this, R.style.BottomSheetDialogTheme)
+        val view = layoutInflater.inflate(R.layout.dialog_badge_detail, null)
+        
+        // Customize for empty state
+        view.findViewById<TextView>(R.id.tvModalBadgeName).text = "No Badge Yet"
+        view.findViewById<TextView>(R.id.tvModalBadgeTier).visibility = View.GONE
+        view.findViewById<TextView>(R.id.tvModalBadgeDesc).text = "Start tracking expenses to earn your first badge."
+        view.findViewById<View>(R.id.pbModalBadgeProgress).visibility = View.GONE
+        view.findViewById<View>(R.id.tvModalProgressText).visibility = View.GONE
+        view.findViewById<View>(R.id.layoutUnlockedDate).visibility = View.GONE
+        view.findViewById<TextView>(R.id.tvModalStatus).text = "Locked"
+        
+        BadgeUIHelper.updateBadgeUI(
+            null, 
+            view.findViewById(R.id.ivModalBadgeIcon), 
+            view.findViewById(R.id.viewModalBadgeBg), 
+            view.findViewById(R.id.viewModalBadgeGloss)
+        )
+
+        view.findViewById<Button>(R.id.btnViewAllBadges).setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, BadgesActivity::class.java))
+        }
+
+        view.findViewById<Button>(R.id.btnCloseModal).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(view)
+        dialog.show()
     }
 
     private fun updatePieChart(totals: Map<Category, Double>) {

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Drop shadow layer -->
+    <item android:top="6dp" android:left="3dp" android:right="3dp">
+        <shape android:shape="oval">
+            <solid android:color="#35000000" />
+            <size android:width="120dp" android:height="120dp" />
+        </shape>
+    </item>
+
+    <!-- Outer rim  -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="60dp"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:startColor="#B8C2CC"
+                android:endColor="#4B5D6D" />
+            <size android:width="120dp" android:height="120dp" />
+        </shape>
+    </item>
+
+    <!-- Main face -->
+    <item android:top="5dp" android:left="5dp" android:right="5dp" android:bottom="5dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="57dp"
+                android:centerX="0.38"
+                android:centerY="0.33"
+                android:startColor="#DDE4EC"
+                android:centerColor="#B8C2CC"
+                android:endColor="#7F8C99" />
+        </shape>
+    </item>
+
+    <!-- Bevel ring -->
+    <item android:top="12dp" android:left="12dp" android:right="12dp" android:bottom="12dp">
+        <shape android:shape="oval">
+            <stroke android:width="1.5dp" android:color="#F8FAFC" />
+            <solid android:color="#00000000" />
+        </shape>
+    </item>
+
+</layer-list>

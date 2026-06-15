@@ -24,4 +24,7 @@ class BudgetApp : Application() {
     val userRepository by lazy {
         UserRepository(database.userDao(), firebaseSyncRepository)
     }
+    val badgeRepository by lazy {
+        BadgeRepository(database.badgeDao(), firebaseSyncRepository)
+    }
 }

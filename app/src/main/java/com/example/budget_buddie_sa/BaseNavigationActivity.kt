@@ -54,6 +54,10 @@ abstract class BaseNavigationActivity : AppCompatActivity() {
                 startActivity(Intent(this, ProfileActivity::class.java))
                 true
             }
+            R.id.action_badges -> {
+                startActivity(Intent(this, BadgesActivity::class.java))
+                true
+            }
             R.id.action_logout -> {
                 val sessionManager = SessionManager(this)
                 sessionManager.clearSession()

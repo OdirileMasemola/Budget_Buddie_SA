@@ -30,6 +30,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val expenseRepo = app.expenseRepository
     private val budgetRepo = app.budgetRepository
     private val userRepo = app.userRepository
+    private val badgeRepo = app.badgeRepository
 
     private val _authState = MutableLiveData<AuthResult>()
     val authState: LiveData<AuthResult> get() = _authState
@@ -128,6 +129,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 categoryRepo.syncFromCloud(cloudData.categories)
                 expenseRepo.syncFromCloud(cloudData.expenses)
                 budgetRepo.syncFromCloud(cloudData.budgets)
+                badgeRepo.syncFromCloud(cloudData.badges)
                 Log.d("AuthViewModel", "Cloud sync completed for user $uid")
             } catch (e: Exception) {
                 Log.e("AuthViewModel", "Cloud sync failed: ${e.message}")

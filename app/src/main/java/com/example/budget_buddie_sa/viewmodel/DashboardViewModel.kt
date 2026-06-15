@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.budget_buddie_sa.BudgetApp
 import com.example.budget_buddie_sa.SessionManager
+import com.example.budget_buddie_sa.data.model.Badge
 import com.example.budget_buddie_sa.data.model.Budget
 import com.example.budget_buddie_sa.data.model.Category
 import com.example.budget_buddie_sa.data.model.Expense
@@ -264,5 +265,25 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
         categoryRepo.getCategoriesForUser(userId).map { it.size }.asLiveData()
     } else {
         MutableLiveData(0)
+    }
+
+    // --- Badge Data ---
+    private val badgeRepo = budgetApp.badgeRepository
+    
+    val highestUnlockedBadge: LiveData<Badge?> = if (userId.isNotEmpty()) {
+        badgeRepo.getBadgesForUser(userId).map { badges ->
+            badges.filter { it.isUnlocked }
+                .sortedWith(compareByDescending<Badge> { 
+                    when (it.rewardType) {
+                        "GOLD" -> 3
+                        "SILVER" -> 2
+                        "BRONZE" -> 1
+                        else -> 0
+                    }
+                }.thenByDescending { it.unlockedDate ?: 0L })
+                .firstOrNull()
+        }.asLiveData()
+    } else {
+        MutableLiveData(null)
     }
 }

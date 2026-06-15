@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This is a transparent gloss layer that adds a shine highlight only -->
+    <item android:top="6dp" android:left="6dp" android:right="36dp" android:bottom="48dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="40dp"
+                android:centerX="0.3"
+                android:centerY="0.3"
+                android:startColor="#B0FFFFFF"
+                android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,6 +1,7 @@
 package com.example.budget_buddie_sa.data.repository
 
 import android.util.Log
+import com.example.budget_buddie_sa.data.model.Badge
 import com.example.budget_buddie_sa.data.model.Budget
 import com.example.budget_buddie_sa.data.model.Category
 import com.example.budget_buddie_sa.data.model.Expense
@@ -115,11 +116,27 @@ class FirebaseSyncRepository {
         }
     }
 
+    // --- Badge Sync ---
+
+    suspend fun syncBadge(badge: Badge) {
+        try {
+            db.collection("users")
+                .document(badge.userId)
+                .collection("badges")
+                .document(badge.badgeId)
+                .set(badge)
+                .await()
+        } catch (e: Exception) {
+            Log.e("FirebaseSync", "Error syncing badge: ${e.message}")
+        }
+    }
+
     data class UserDataSnapshot(
         val user: User?,
         val categories: List<Category>,
         val expenses: List<Expense>,
-        val budgets: List<Budget>
+        val budgets: List<Budget>,
+        val badges: List<Badge>
     )
 
     /**
@@ -137,6 +154,9 @@ class FirebaseSyncRepository {
         val budgets = db.collection("users").document(userId).collection("budgets")
             .get().await().toObjects(Budget::class.java)
 
-        return UserDataSnapshot(user, categories, expenses, budgets)
+        val badges = db.collection("users").document(userId).collection("badges")
+            .get().await().toObjects(Badge::class.java)
+
+        return UserDataSnapshot(user, categories, expenses, budgets, badges)
     }
 }

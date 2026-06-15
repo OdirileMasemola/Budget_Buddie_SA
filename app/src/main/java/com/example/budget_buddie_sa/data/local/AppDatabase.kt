@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.budget_buddie_sa.data.model.Badge
 import com.example.budget_buddie_sa.data.model.Budget
 import com.example.budget_buddie_sa.data.model.Category
 import com.example.budget_buddie_sa.data.model.Expense
@@ -14,8 +15,8 @@ import com.example.budget_buddie_sa.data.model.User
  * Includes all entities and provides access to DAOs.
  */
 @Database(
-    entities = [Category::class, Expense::class, Budget::class, User::class],
-    version = 6, // Incrementing version to 6 to resolve schema mismatch
+    entities = [Category::class, Expense::class, Budget::class, User::class, Badge::class],
+    version = 7, // Incrementing version to 7 for Badge entity
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -24,6 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun expenseDao(): ExpenseDao
     abstract fun budgetDao(): BudgetDao
     abstract fun userDao(): UserDao
+    abstract fun badgeDao(): BadgeDao
 
     companion object {
         @Volatile

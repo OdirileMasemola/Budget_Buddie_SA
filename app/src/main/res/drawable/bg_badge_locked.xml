@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Drop shadow layer -->
+    <item android:top="6dp" android:left="3dp" android:right="3dp">
+        <shape android:shape="oval">
+            <solid android:color="#20000000" />
+            <size android:width="120dp" android:height="120dp" />
+        </shape>
+    </item>
+
+    <!-- Outer rim -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#BDBDBD" />
+            <size android:width="120dp" android:height="120dp" />
+        </shape>
+    </item>
+
+    <!-- Main face -->
+    <item android:top="5dp" android:left="5dp" android:right="5dp" android:bottom="5dp">
+        <shape android:shape="oval">
+            <solid android:color="#E0E0E0" />
+        </shape>
+    </item>
+
+    <!-- Inner bevel ring -->
+    <item android:top="12dp" android:left="12dp" android:right="12dp" android:bottom="12dp">
+        <shape android:shape="oval">
+            <stroke android:width="1dp" android:color="#BDBDBD" />
+            <solid android:color="#00000000" />
+        </shape>
+    </item>
+
+</layer-list>
