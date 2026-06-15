@@ -766,12 +766,6 @@ git clone https://github.com/OdirileMasemola/Budget_Buddie_SA.git
 
 ---
 
-## Demo
-
-Watch the full walkthrough on YouTube:  
-**[Budget Buddie SA — Video]([https://youtu.be/TnXcwW8aHzo](https://youtu.be/TnXcwW8aHzo))**
-
----
 
 ## The Team
 
